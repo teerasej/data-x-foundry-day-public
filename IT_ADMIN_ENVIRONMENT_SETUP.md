@@ -1,13 +1,12 @@
-# IT Admin Environment Setup for the Microsoft Foundry Agent Workshop
+# Azure Admin Environment Setup checklist for the Microsoft Foundry Agent Workshop
 
-This guide prepares one isolated Azure and GitHub development environment per learner. Complete it before the workshop and rehearse the complete journey with an ordinary learner account on the actual workshop network.
+ขั้นตอนนี้เป็นขั้นตอนสำหรับ Azure Admin ขององค์กรในการเตรียม environment, Azure Account, และ Role ที่จำเป็นต้องกำหนดให้กับ resource group สำหรับผู้เรียนที่จะเข้าร่วม workshop ของ Microsoft Foundry Agent ครับ
 
-> **Security boundary:** Give each learner one dedicated Azure resource group. Do not grant learner permissions at subscription scope, and do not reuse one cohort-wide group across every learner resource group.
 
 
 ## 1. Prepare the Azure subscription
 
-> งานส่วนนี้เป็นงานระดับ subscription ของ IT Admin ครับ 
+> งานส่วนนี้เป็นงานระดับ subscription ของ Azure Admin ขององค์กร ครับ 
 
 ให้แน่ใจว่า subscription ที่สร้างให้กับผู้เรียนได้ register provider ที่จำเป็นทั้งหมดแล้ว:
 
@@ -20,7 +19,7 @@ This guide prepares one isolated Azure and GitHub development environment per le
 
 ## 2. สร้าง resource group ให้กับผู้เรียนแต่ละคน
 
-> งานส่วนนี้เป็นงานของ IT Admin ครับ 
+> งานส่วนนี้เป็นงานของ Azure Admin ขององค์กร ครับ 
 
 1. สร้าง resource group ที่ผู้เรียนแต่ละคนจะใช้ 1 resource group ต่อผู้เรียน โดยใช้ naming convention ที่ชัดเจน เช่น `foundry-workshop-learner1-rg` หรือ `foundry-workshop-learner2-rg` เพื่อให้สามารถระบุผู้เรียนได้ง่าย
 2. กำหนดเพิ่ม role และ permission ให้กับผู้เรียนแต่ละคนใน resource group ของตนเอง โดยไม่ให้สิทธิ์ในการเข้าถึง resource group ของผู้เรียนคนอื่น
@@ -28,7 +27,7 @@ This guide prepares one isolated Azure and GitHub development environment per le
 
 ## 3. Assign the 8 roles ให้ account ผู้เรียนกับ resource group ของตนเอง
 
-> งานส่วนนี้เป็นงานของ IT Admin ครับ 
+> งานส่วนนี้เป็นงานของ Azure Admin ขององค์กร ครับ 
 
 ทำการเพิ่ม role assignments ให้กับผู้เรียนแต่ละคน สำหรับ resource group ของตนเอง โดยใช้ role ตามรายละเอียดที่กำหนดไว้ด้านล่าง
 
