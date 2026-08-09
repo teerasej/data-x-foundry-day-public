@@ -4,22 +4,12 @@ This guide prepares one isolated Azure and GitHub development environment per le
 
 > **Security boundary:** Give each learner one dedicated Azure resource group. Do not grant learner permissions at subscription scope, and do not reuse one cohort-wide group across every learner resource group.
 
-## 1. Record the assignment internally
 
-Keep the following details in the organization's approved private system, not in this public repository:
+## 1. Prepare the Azure subscription
 
-- Learner Azure account or per-learner Microsoft Entra security group
-- Dedicated resource-group name
-- Approved subscription, region, and model deployment
-- GitHub account type: personal, organization member/collaborator, or Enterprise Managed User
-- Role start and removal time
-- Cleanup and support owners
+> งานส่วนนี้เป็นงานระดับ subscription ของ IT Admin ครับ 
 
-Never place credentials, Temporary Access Pass values, access tokens, tenant IDs, subscription IDs, object IDs, or copied sign-in URLs in learner material.
-
-## 2. Prepare the Azure subscription
-
-Register these resource providers before training:
+ให้แน่ใจว่า subscription ที่สร้างให้กับผู้เรียนได้ register provider ที่จำเป็นทั้งหมดแล้ว:
 
 | Service | Provider namespace |
 |---|---|
@@ -28,27 +18,23 @@ Register these resource providers before training:
 | Azure Blob Storage | `Microsoft.Storage` |
 | Azure Bot Service | `Microsoft.BotService` |
 
-Provider registration is an IT subscription-level task. A learner's `Contributor` assignment remains limited to the dedicated resource group.
+## 2. สร้าง resource group ให้กับผู้เรียนแต่ละคน
 
-Also confirm:
+> งานส่วนนี้เป็นงานของ IT Admin ครับ 
 
-- The selected region supports every required Foundry and Azure AI Search capability.
-- Model availability and quota support the full concurrent cohort.
-- The subscription has approved billing, budget, and cleanup controls.
-- Microsoft 365 licensing and tenant policies are ready if the optional Teams/Copilot exercise will be used.
+1. สร้าง resource group ที่ผู้เรียนแต่ละคนจะใช้ 1 resource group ต่อผู้เรียน โดยใช้ naming convention ที่ชัดเจน เช่น `foundry-workshop-learner1-rg` หรือ `foundry-workshop-learner2-rg` เพื่อให้สามารถระบุผู้เรียนได้ง่าย
+2. กำหนดเพิ่ม role และ permission ให้กับผู้เรียนแต่ละคนใน resource group ของตนเอง โดยไม่ให้สิทธิ์ในการเข้าถึง resource group ของผู้เรียนคนอื่น
 
-## 3. Create one learner resource group
 
-1. Create a dedicated resource group for the learner.
-2. Assign the learner directly or use a separate security group for that learner.
-3. Confirm no other learner belongs to a principal that can modify this resource group.
-4. Record the planned role-removal and resource-cleanup time.
+## 3. Assign the 8 roles ให้ account ผู้เรียนกับ resource group ของตนเอง
 
-Think of the resource group as one learner's workshop room: the learner can work freely inside that room but receives no key to another learner's room or the whole building.
+> งานส่วนนี้เป็นงานของ IT Admin ครับ 
 
-## 4. Assign the eight learner roles
+ทำการเพิ่ม role assignments ให้กับผู้เรียนแต่ละคน สำหรับ resource group ของตนเอง โดยใช้ role ตามรายละเอียดที่กำหนดไว้ด้านล่าง
 
-Assign every role in this table to the learner or per-learner security group at the **dedicated resource-group scope**.
+![alt text](image-3.png)
+> มีภาพตัวอย่างด้านล่างของตารางเพื่อตรวจเช็คครับ
+
 
 | Role | Role-definition ID | Workshop purpose |
 |---|---|---|
@@ -61,134 +47,45 @@ Assign every role in this table to the learner or per-learner security group at 
 | `Search Index Data Reader` | `1407120a-92aa-4202-b7e9-c0e197c71c8f` | Provides explicit read-only Search and knowledge-base retrieval access for the signed-in learner. |
 | `Role Based Access Control Administrator` | `f58310d9-a9f6-439a-9e8d-f62e7b41a168` | Temporarily lets the Foundry wizard create required non-privileged managed-identity assignments inside the learner resource group. The mandatory condition is described below. |
 
-`Cognitive Services User` and `Foundry Project Manager` serve different purposes. The first authorizes direct model-endpoint inference; the second authorizes Foundry project and agent work. Keep both assignments.
+> การกำหนด Role Based Access Control Administrator จะมีรายละเอียดเพิ่มเติมด้านล่างครับ
 
-### Apply the mandatory privileged-role condition
+### ภาพตัวอย่างหลังจากทำการ assign role ให้กับผู้เรียนใน resource group ของตัวเอง เรียบร้อยแล้ว
 
-Create the `Role Based Access Control Administrator` assignment through the Azure portal so an administrator reviews the condition visibly:
+สมมติว่าผู้เรียนมีชื่อว่า **DataX 001** และ resource group ของผู้เรียนคือ **datax-001** หลังจาก assign role ให้กับผู้เรียนเรียบร้อยแล้ว จะได้หน้าตาแบบนี้
 
-1. Open the learner's dedicated resource group.
-2. Select **Access control (IAM) > Add > Add role assignment**.
-3. Open **Privileged administrator roles**.
-4. Select **Role Based Access Control Administrator**.
-5. Assign the learner or that learner's dedicated security group.
-6. Under **What user can do**, select **Allow user to assign all roles except privileged administrator roles Owner, UAA, RBAC (Recommended)**.
-7. Confirm the assignment scope is the learner resource group—not the subscription or another resource group.
-8. Confirm the completed assignment contains a condition and condition version.
-9. Record its approved expiry or removal time.
+![alt text](image.png)
 
-> **⚠️ Never do this:** Do not assign this role without the condition, at subscription scope, or through a bare CLI command that omits the condition. The approved condition still permits non-privileged role assignments inside the learner resource group, so per-learner isolation and prompt cleanup are mandatory.
+### รายละเอียดการกำหนด Role Based Access Control Administrator
 
-### Verify all learner assignments
+นักเรียนจำเป็นต้องมีการกำหนดสิทธิ์ `Role Based Access Control Administrator` เพื่อให้สามารถสร้าง managed identity สำหรับ Foundry IQ ได้ แต่ต้องมีเงื่อนไข (condition) เพื่อจำกัดสิทธิ์ไม่ให้ผู้เรียนสามารถ assign role ที่เป็น privileged ได้
 
-Use an approved administrator profile. The command is read-only and should return eight learner assignments at the intended scope:
+1. เปิด resource group ของผู้เรียนใน Azure portal
+2. เลือก **Access control (IAM) > Add > Add role assignment**.
+   ![alt text](image-3.png)
+3. เปิด **Privileged administrator roles**.
+4. เลือก **Role Based Access Control Administrator**.
+  ![alt text](image-2.png)
+1. เลือก account ผู้เรียน
+2. ในส่วนของ **What user can do**, เลือก **Allow user to assign all roles except privileged administrator roles Owner, UAA, RBAC (Recommended)**.
+  ![alt text](image-1.png)
+1. กด **Next** และตรวจสอบรายละเอียดการ assign role ให้ถูกต้อง
+2. กด assign เพื่อทำการ assign role ให้กับผู้เรียน
 
-```azurecli
-az role assignment list \
-  --assignee-object-id <learner-or-per-learner-group-object-id> \
-  --scope <learner-resource-group-resource-id> \
-  --include-inherited \
-  --query "[].{Role:roleDefinitionName,Scope:scope,Condition:condition,ConditionVersion:conditionVersion}" \
-  --output table
-```
+> **⚠️ Never do this:** ห้ามกำหนด assign role นี้โดยที่ไม่กำหนด condition
 
-Review the privileged assignment separately. An empty condition or a broader scope is a failed readiness check.
 
-## 5. Verify identities created during the exercises
+## 5. ตรวจสอบว่า network และเครื่องของผู้เรียนสามารถใช้งาน github.com รวมถึงการดาวน์โหลดและอัพโหลดไฟล์ได้
 
-Roles assigned to the human learner do not authorize a service that runs as a managed identity. After the resources exist, verify these separate callers:
+1. ตรวจสอบว่าเครื่องของผู้เรียนสามารถเข้าถึง [GitHub repository ของ workshop](https://github.com/teerasej/data-x-foundry-day-public/) ได้
+   
+2. ตรวจสอบว่าเครื่องของผู้เรียนสามารถใช้งาน Github Codespaces ได้ 
 
-| Caller | Role | Target scope | Purpose |
-|---|---|---|---|
-| Foundry project managed identity | `Foundry User` | Associated Foundry resource | Accesses Foundry models and runtime capabilities. |
-| Project or agent managed identity | `Search Index Data Reader` | Azure AI Search service | Retrieves from the Foundry IQ knowledge base at runtime. |
-| Azure AI Search managed identity | `Cognitive Services User` | Foundry resource hosting the model | Calls the model for keyless Foundry IQ processing. |
-| Azure AI Search managed identity | `Storage Blob Data Reader` | Exercise Storage account or Blob container | Reads source documents when the knowledge source uses managed identity. |
 
-For the published Foundry IQ exercise, configure Azure AI Search **Security + networking > Keys > API Access control** as **Both**. The portal performs an Entra/RBAC preflight, while the exercise also uses a Search key. Do not switch to RBAC-only without adapting and rehearsing the exercise.
+## 6. Cleanup
 
-Treat a missing identity assignment as a rehearsal failure. Do not depend on an administrator repairing it during the live learner session.
+1. ลบ resource group ของผู้เรียนแต่ละคนหลังจาก workshop เสร็จสิ้น เพื่อป้องกันค่าใช้จ่ายที่ไม่จำเป็น
 
-## 6. Prepare GitHub and Codespaces
-
-The workshop uses GitHub Codespaces as the primary environment. The repository requests 2 CPUs, 4 GB memory, 16 GB storage, Python 3.12, Git, Azure CLI, and the required VS Code extensions.
-
-### Personal GitHub account
-
-- Confirm the learner can sign in and open the workshop repository.
-- Confirm the account has remaining included Codespaces usage or an approved payment method and budget.
-- Ask the learner to create one rehearsal Codespace and stop it after validation.
-
-### Organization-managed GitHub account
-
-- Add the learner as an organization member or collaborator when required by repository visibility.
-- Enable Codespaces for the learner under the organization's Codespaces access settings.
-- If the organization will pay, use an organization-owned Codespace configuration and a nonzero Codespaces budget.
-- For a private repository, provide read access plus permitted forking, or provide write access. The current workshop needs repository read access; fork or write access is required only if learners must push their work.
-- Rehearse Enterprise Managed User behavior explicitly. Do not assume it matches a personal account.
-
-GitHub documents current organization access and billing behavior in [Enabling or disabling GitHub Codespaces](https://docs.github.com/codespaces/managing-codespaces-for-your-organization/enabling-or-disabling-github-codespaces-for-your-organization) and [Choosing who owns and pays for codespaces](https://docs.github.com/codespaces/managing-codespaces-for-your-organization/choosing-who-owns-and-pays-for-codespaces-in-your-organization).
-
-### Local fallback
-
-If Codespaces is unavailable, prepare a managed workstation with:
-
-- Stable VS Code and the Dev Containers extension
-- Docker or another organization-approved Dev Container runtime
-- Git and a supported browser
-- Network access to the same Azure, GitHub, container-registry, and package-feed services
-- At least the same 2 CPU, 4 GB memory, and 16 GB storage capacity
-
-Open the repository in its Dev Container rather than recreating dependencies manually.
-
-## 7. Validate the workshop network and learner machine
-
-Test from the actual classroom network and ordinary learner device. Permit the minimum organization-approved access needed for:
-
-- GitHub repository pages, authentication, Codespaces, and source downloads
-- `mcr.microsoft.com` and `ghcr.io` for the Dev Container image and features
-- Codespaces browser tunnels and private forwarding for port `8000`
-- Azure portal, Microsoft Foundry portal, Microsoft Entra sign-in, and device-code authentication
-- Foundry project and model endpoints
-- Azure AI Search and Blob Storage endpoints
-- Microsoft Learn MCP at `https://learn.microsoft.com/api/mcp`
-- Python package installation during Codespace bootstrap
-
-Do not maintain a copied static Codespaces domain list. Query GitHub's current metadata before the rehearsal:
-
-```bash
-gh api meta --jq .domains.codespaces
-```
-
-If a corporate firewall or TLS inspection product blocks Codespaces, review GitHub's [Codespaces connection troubleshooting](https://docs.github.com/codespaces/troubleshooting/troubleshooting-your-connection-to-github-codespaces), including the guidance for `*.visualstudio.com`.
-
-## 8. Ordinary-learner acceptance test
-
-Complete every check without administrator credentials in the learner browser or terminal:
-
-- [ ] Learner can open the repository and create or open a Codespace.
-- [ ] Codespace bootstrap completes and `python -m service_ops check` shows the base tools as `READY`.
-- [ ] `az login --use-device-code` succeeds with required MFA or Conditional Access.
-- [ ] Learner can read and modify resources only in the assigned resource group.
-- [ ] Azure portal **View my access** shows all eight learner assignments.
-- [ ] IT verifies the privileged assignment's scope, condition, and condition version.
-- [ ] Learner can create/select the Foundry project and deploy the approved model.
-- [ ] Learner can invoke the approved model with Microsoft Entra authentication and no API key.
-- [ ] Foundry IQ creates Search and Storage without an **Almost there** access warning.
-- [ ] Knowledge ingestion and direct learner retrieval succeed.
-- [ ] The agent retrieves grounded content through its own managed identity.
-- [ ] The learner cannot assign `Owner`, `User Access Administrator`, or `Role Based Access Control Administrator` and cannot assign roles outside the dedicated resource group.
-- [ ] External MCP and required package feeds are reachable.
-
-## 9. Cleanup
-
-1. Remove or expire the conditional `Role Based Access Control Administrator` assignment first.
-2. Remove the learner's other temporary assignments.
-3. Delete workshop resources according to the approved cleanup policy.
-4. Stop or delete organization-funded Codespaces according to the retention policy.
-5. Retain only approved audit evidence; never retain learner credentials or tokens.
-
-## References
+## อ้างอิง
 
 - [Azure built-in roles](https://learn.microsoft.com/azure/role-based-access-control/built-in-roles)
 - [Role-based access control for Microsoft Foundry](https://learn.microsoft.com/azure/foundry/concepts/rbac-foundry)
