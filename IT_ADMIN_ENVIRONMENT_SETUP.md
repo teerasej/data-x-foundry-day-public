@@ -31,7 +31,7 @@
 
 ทำการเพิ่ม role assignments ให้กับผู้เรียนแต่ละคน สำหรับ resource group ของตนเอง โดยใช้ role ตามรายละเอียดที่กำหนดไว้ด้านล่าง
 
-![alt text](image-3.png)
+![เปิดหน้าการเพิ่ม Role assignment](images/admin-section-3-step-2-add-role-assignment.png)
 > มีภาพตัวอย่างด้านล่างของตารางเพื่อตรวจเช็คครับ
 
 
@@ -52,7 +52,7 @@
 
 สมมติว่าผู้เรียนมีชื่อว่า **DataX 001** และ resource group ของผู้เรียนคือ **datax-001** หลังจาก assign role ให้กับผู้เรียนเรียบร้อยแล้ว จะได้หน้าตาแบบนี้
 
-![alt text](image.png)
+![Role ที่กำหนดให้บัญชีผู้เรียน](images/admin-section-3-checkpoint-assigned-roles.png)
 
 ### รายละเอียดการกำหนด Role Based Access Control Administrator
 
@@ -60,13 +60,13 @@
 
 1. เปิด resource group ของผู้เรียนใน Azure portal
 2. เลือก **Access control (IAM) > Add > Add role assignment**.
-   ![alt text](image-3.png)
+   ![เปิดเมนู Add role assignment](images/admin-section-3-step-2-add-role-assignment.png)
 3. เปิด **Privileged administrator roles**.
 4. เลือก **Role Based Access Control Administrator**.
-  ![alt text](image-2.png)
+  ![เลือก Role Based Access Control Administrator](images/admin-section-3-step-4-select-rbac-admin-role.png)
 1. เลือก account ผู้เรียน
 2. ในส่วนของ **What user can do**, เลือก **Allow user to assign all roles except privileged administrator roles Owner, UAA, RBAC (Recommended)**.
-  ![alt text](image-1.png)
+  ![กำหนด Condition สำหรับ Role assignment](images/admin-section-3-step-6-configure-assignment-condition.png)
 1. กด **Next** และตรวจสอบรายละเอียดการ assign role ให้ถูกต้อง
 2. กด assign เพื่อทำการ assign role ให้กับผู้เรียน
 
