@@ -14,6 +14,12 @@
 - GitHub Codespaces มี included usage จำกัดตามประเภทบัญชี จึงต้องตรวจสอบสิทธิ์ก่อนเริ่มอบรม
 - ถ้าใช้ Codespaces ไม่ได้ ให้ใช้ VS Code พร้อม Dev Containers เป็น fallback
 
+## ดาวน์โหลดไฟล์เตรียมแบบครั้งเดียว
+
+- ผู้เรียนสามารถดาวน์โหลดไฟล์ตัวอย่างของ Exercise 1-7 แบบครั้งเดียวได้ที่ [student-prep-files.zip](./exercises/student-prep-files.zip)
+- หลังดาวน์โหลดให้แตกไฟล์ zip โดยคงโครงสร้างโฟลเดอร์เดิม เพื่อหาไฟล์ตามขั้นตอนแต่ละ Exercise ได้ง่าย
+- ผู้สอนสามารถ rebuild ไฟล์นี้ได้ด้วยคำสั่ง `bash scripts/build_student_prep_zip.sh`
+
 ## เริ่ม Codespace
 
 1. เปิด repository นี้ใน GitHub แล้วเลือก **Code > Codespaces > Create codespace on current branch**

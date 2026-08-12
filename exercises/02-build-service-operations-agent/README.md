@@ -1,16 +1,19 @@
 # Exercise 2: สร้าง Fabrikam Service Operations Agent
 
-เราจะเพิ่ม Agent สองเส้นทางใน Foundry project เดิม: portal-managed agent สำหรับทดลอง File search และ Code interpreter และ code-owned Agent Framework agent สำหรับเรียก local function tools จาก application เดียวกัน
+ใบแบบฝึกหัดนี้พลจะพาเราเพิ่ม Agent 2 ตัวใน Foundry project: 
+   1. portal-managed agent สำหรับทดลอง File search และ Code interpreter
+   2. code-owned Agent Framework agent สำหรับเรียก local function tools จาก application เดียวกัน
 
-เหมือนร้านอาหารที่มีทั้งเมนูมาตรฐานเก็บไว้หน้าร้านและเชฟที่ประกอบเมนูจากโค้ด: ทั้งสองใช้ครัวเดียวกัน แต่ portal เก็บ agent definition ไว้ใน Foundry ส่วน code-owned agent ส่ง instructions และ tools จาก application ตอนรัน
+เหมือนร้านอาหารที่มีทั้งเมนูมาตรฐานเก็บไว้หน้าร้านและเชฟที่ประกอบเมนูจากโค้ด: ทั้งสองเมนูใช้ครัวเดียวกัน แต่ portal เก็บ agent definition ไว้ใน Foundry ส่วน code-owned agent ส่ง instructions และ tools จาก application ตอนรันทำงาน
 
 > **License และค่าใช้จ่าย:** เนื้อหาต้นฉบับเป็นลิขสิทธิ์ของ Amaround Co., Ltd. แบบ All rights reserved และมีส่วนที่ดัดแปลงจาก MicrosoftLearning ภายใต้ MIT License ตาม [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) การเรียก model ใช้ Azure quota ของสภาพแวดล้อมอบรม
 
 ## Prerequisites
 
-- ผ่าน Checkpoint ของ Exercise 1
+- ผ่านการทำ Exercise 1 มาแล้ว
 - Foundry project และ approved model deployment ยังทำงานอยู่
 - `.env` มี `FOUNDRY_PROJECT_ENDPOINT`, `FOUNDRY_MODEL` และ `FOUNDRY_AGENT_NAME`
+- ดาวน์โหลดไฟล์ตัวอย่างแบบครั้งเดียวจาก [student-prep-files.zip](../student-prep-files.zip) แล้วแตกไฟล์
 - Sample files:
   - [service-handbook.md](./files/service-handbook.md)
   - [service-metrics.csv](./files/service-metrics.csv)
@@ -23,11 +26,11 @@
 
 1. ใน Codespace Explorer เปิดโฟลเดอร์ `exercises/02-build-service-operations-agent/files`
 
-2. คลิกขวา `service-handbook.md` และ `service-metrics.csv` แล้วเลือก **Download** เพื่อเตรียมไฟล์สำหรับอัปโหลดผ่าน browser
+2. ถ้ายังไม่ได้ดาวน์โหลดไฟล์รวม ให้ดาวน์โหลด [student-prep-files.zip](../student-prep-files.zip) แล้วแตกไฟล์ จากนั้นใช้ `service-handbook.md` และ `service-metrics.csv` สำหรับอัปโหลดผ่าน browser
 
 3. เปิด Foundry project เดิมใน [Microsoft Foundry portal](https://ai.azure.com)
 
-4. เปิด **Build > Agents** แล้วเลือก **Create agent** ถ้า portal สร้าง draft agent ให้อัตโนมัติ ให้ใช้ draft นั้น
+4. เปิด **Build > Agents** แล้วเลือก **New agent** > **Build an agent** 
 
 5. ตั้ง **Agent name** เป็น:
 
@@ -35,7 +38,7 @@
    fabrikam-service-operations-agent
    ```
 
-6. เลือก approved model deployment เดียวกับ Exercise 1
+6. เลือก model deployment เดียวกับ Exercise 1
 
 7. แทนค่า **Instructions** ด้วยข้อความนี้:
 
@@ -51,38 +54,37 @@
    - Keep answers concise and practical.
    ```
 
-8. ในส่วน **Tools** เลือก **Add** แล้วเพิ่ม **File search** และ **Code interpreter**
-
+8. ลงมาด้านล่างของ instruction ในส่วน **Tools** 
 9. อัปโหลด `service-handbook.md` ให้ **File search** แล้วรอจนการทำ index เสร็จ
+10. เลือก **Add** แล้วเพิ่ม  **Code interpreter** 
+11. อัปโหลด `service-metrics.csv` ให้ **Code interpreter** แล้วเลือก **Save**
 
-10. อัปโหลด `service-metrics.csv` ให้ **Code interpreter** แล้วเลือก **Save**
-
-11. ทดสอบ handbook ด้วย prompt:
+12. ทดสอบ handbook ด้วย prompt:
 
     ```text
     A customer-facing integration is unavailable for every user. Which priority applies, what is the acknowledgement target, and when should we escalate?
     ```
 
-12. ตรวจว่าคำตอบระบุ `P1`, เป้าหมาย 15 นาที และ human escalation ตาม handbook พร้อมอ้างชื่อไฟล์
+13. ตรวจว่าคำตอบระบุ `P1`, เป้าหมาย 15 นาที และ human escalation ตาม handbook พร้อมอ้างชื่อไฟล์
 
-13. ทดสอบ metrics ด้วย prompt:
+14. ทดสอบ metrics ด้วย prompt:
 
     ```text
     Analyze the service metrics. Which metrics miss their targets, and what should the service manager investigate first? Use only the attached CSV.
     ```
 
-14. ตรวจว่าคำตอบพบ `resolution_rate_percent` และ `open_p1_incidents` ว่าไม่ถึงเป้าหมาย
+15. ตรวจว่าคำตอบพบ `resolution_rate_percent` ว่าไม่ถึงเป้าหมาย และ `open_p1_incidents` มีการรายงานซึ่งหมายถึงมีเหตุต้องตรวจสอบ
 
-15. เปิด **Foundry Toolkit > Microsoft Foundry Resources > Set Default Project** แล้วเลือก project เดิม
+16. เปิด **Foundry Toolkit > Microsoft Foundry Resources > Set Default Project** แล้วเลือก project เดิม
 
-16. ใต้ **Prompt Agents** เปิด `fabrikam-service-operations-agent` และส่ง handbook prompt ซ้ำ
+17. ในเมนู Agent > เลือก **Prompt Agents** > เปิด `fabrikam-service-operations-agent` และทดสอบส่่ง prompt ตัวอย่างด้านบนซ้ำ
 
 ### Checkpoint
 
 - Agent ตอบ policy question จาก handbook และวิเคราะห์ metrics จาก CSV ได้ใน portal
 - Agent เดียวกันเปิดและตอบ handbook prompt ผ่าน Foundry Toolkit ได้
 
-> **⚠️ Note:** ถ้า File search หรือ Code interpreter ไม่พร้อมใช้งาน ให้ผู้สอนสาธิต portal path แล้วทำ Practice 2–3 ต่อ ซึ่งใช้ local function tools กับข้อมูลชุดเดียวกัน
+> **⚠️ Note:** ถ้า File search หรือ Code interpreter ไม่พร้อมใช้งาน ให้ดูผู้สอนสาธิต portal-managed agent แล้วทำ Practice 2–3 ต่อ ซึ่งใช้ local function tools กับข้อมูลชุดเดียวกัน
 
 ---
 
@@ -111,16 +113,9 @@
    )
    ```
 
-4. บันทึกไฟล์ แล้วตรวจ code style และ deterministic tests:
+4. ลองดูว่า code นี้มีจุดสำคัญอะไรบ้าง:
 
-   ```bash
-   python -m ruff check service_ops tests
-   python -m pytest
-   ```
-
-5. ตรวจความเข้าใจใน code:
-
-   - `AzureCliCredential` ใช้ session จาก `az login` โดยไม่เก็บ key ใน repository
+   - `AzureCliCredential` ใช้ session จาก `az login` โดยไม่เก็บ key ใน repository จุดนี้สามารถเปลี่ยนเป็น `DefaultAzureCredential` หรือ `ManagedIdentityCredential` ได้ถ้าใช้ใน production
    - `FoundryChatClient` เชื่อม project endpoint กับ model deployment
    - `Agent` เก็บ instructions และ local tools ใน application
    - `search_service_handbook` และ `list_service_metrics` อ่านเฉพาะ synthetic files ของ Exercise นี้
@@ -164,9 +159,15 @@
    python -m service_ops agent
    ```
 
-7. ลองถาม follow-up หนึ่งข้อ แล้วพิมพ์ `exit` เพื่อจบ
+7. ลองถาม prompt follow-up หนึ่งข้อ เช่น:
 
-8. เปรียบเทียบสองเส้นทาง:
+   ```text
+   Based on the handbook, who should be notified first for a P1 incident and what update cadence should we follow?
+   ```
+
+8. พิมพ์ `exit` เพื่อจบการทำงาน
+
+9. หลังจากลองกันทั้ง 2 แบบแล้ว มาเปรียบเทียบการสร้าง Agent สองแบบนี้กัน:
 
    | เส้นทาง | Agent definition อยู่ที่ไหน | Data/tool path |
    |---|---|---|
