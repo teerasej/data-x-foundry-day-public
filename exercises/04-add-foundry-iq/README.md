@@ -1,56 +1,109 @@
 # Exercise 4: เพิ่ม Foundry IQ และ citation
 
-Fabrikam ต้องการให้ Agent ตอบนโยบายจากเอกสารที่อนุมัติและบอกแหล่งที่มา เราจะสร้าง Foundry IQ knowledge base จากเอกสารสังเคราะห์ แล้วเชื่อม portal-managed Agent เดิมเข้ากับ Python application
+Fabrikam ต้องการให้ Agent ตอบคำถามผู้ใช้จากเอกสารข้อมูลที่เรากำหนด เราจะสร้าง Foundry IQ knowledge base จากเอกสารตัวอย่าง แล้วเชื่อม portal-managed Agentเดิมเข้ากับ Python application
 
-> **License:** Original workshop content © 2026 Amaround Co., Ltd. All rights reserved. Third-party notices are recorded in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md).
 
-ใช้เวลาประมาณ **45 นาที** และใช้ Foundry project กับ model deployment เดิม
 
 ## Prerequisites
 
 - มีไฟล์ [service-severity-policy.md](./files/service-severity-policy.md), [service-channels.md](./files/service-channels.md) และ [maintenance-playbook.md](./files/maintenance-playbook.md)
-- IT Admin ยืนยัน Azure AI Search, Storage, region, quota และ provider registration แล้ว
-- ผู้เรียนมี `Search Service Contributor`, `Search Index Data Contributor` และ `Search Index Data Reader` ภายใน resource group ที่ได้รับมอบหมาย
+- IT Admin ยืนยันว่ามี Azure AI Search, Storage, region, quota และ provider ถูก register ในระบบที่ผู้เรียนใช้แล้ว
+- ผู้เรียนมี role ต่อไปนี้ ภายใน resource group ที่ได้จาก IT admin 
+  - `Search Service Contributor`
+  - `Search Index Data Contributor`
+  - `Search Index Data Reader`
 - Project/Agent managed identity มีสิทธิ์อ่าน index ตามที่ IT Admin เตรียมไว้
-- Azure AI Search ตั้ง **Security + networking > Keys > API Access control** เป็น **Both** สำหรับเส้นทาง workshop นี้
+- Azure AI Search จะมีการตั้ง **Security + networking > Keys > API Access control** เป็น **Both** สำหรับการทำ workshop นี้
 
-> **⚠️ ต้องตรวจสอบก่อนเริ่มอบรม:** Foundry IQ availability, Search tier, model availability, RBAC และ portal labels อาจต่างกันตาม region/tenant ถ้า provisioning ไม่สำเร็จ ให้ใช้ knowledge base ที่ IT Admin เตรียมไว้ ห้ามให้ผู้เรียนขอ subscription-level permission หรือ assign role ให้ตนเอง
+> **⚠️ ต้องตรวจสอบก่อนเริ่มอบรม:** Foundry IQ availability, Search tier, model availability, RBAC และ portal labels อาจต่างกันตาม region/tenant ถ้า provisioning ไม่สำเร็จ ให้ดูตามตัวอย่างและลองทำตามภายหลังได้ ห้ามให้ผู้เรียนขอ subscription-level permission หรือ assign role ให้ตนเอง
 
 ---
 
 ## Practice 1: เตรียม knowledge source
 
-**Primary target:** สร้าง knowledge source จากเอกสารสังเคราะห์สามไฟล์และตรวจว่า source พร้อมใช้งาน
+**Primary target:** สร้าง knowledge source จากเอกสารตัวอย่างสามไฟล์และตรวจว่า source พร้อมใช้งาน
 
 1. เปิด [Microsoft Foundry portal](https://ai.azure.com) แล้วเลือก project เดิมจาก Exercise 1
 2. เปิด **Build > Agents** แล้วเลือก Agent เดิม หรือสร้าง portal-managed Agent ชื่อ `fabrikam-service-operations-iq` โดยใช้ model deployment ที่ผู้สอนอนุมัติ
-3. ในส่วน **Knowledge** เลือก **Add > Connect to Foundry IQ**
-4. เลือก Azure AI Search ที่อยู่ใน resource group ของตนเอง
-   - ถ้า IT Admin เตรียม Search และ Storage ไว้แล้ว ให้เลือกของผู้เรียนเท่านั้น
-   - ถ้าผู้เรียนได้รับอนุญาตให้สร้างเอง ให้ใช้ region เดียวกับ project และ tier ที่ผู้สอนกำหนด
-5. สร้าง container ชื่อ `service-knowledge` ใน Storage ที่ได้รับมอบหมาย แล้ว upload เอกสารทั้งสามไฟล์ของ Exercise นี้
-6. ในหน้า Foundry IQ เลือก **Create a knowledge base**, ใช้ **Azure Blob Storage** เป็น knowledge source แล้วตั้งค่า:
+3. ในส่วนเมนู **Build** > **Knowledge** และเลื่อนลงมาด้านล่าง
+4. เราสามารถเลือก knowledge base ที่มีอยู่ก่อนแล้วได้ แต่ในที่นีี้เราจะสร้าง Azure AI Search ขึ้นใหม่ ซึ่งเป็นกลไกสำคัญของ Foundry IQ knowledge base
+5. เลือก **Create new resource**
+   ![หน้าจอสร้าง Azure AI Search resource ใหม่](images/practice-1-step-5-create-ai-search-resource.png)
+6. กรอกรายละเอียดตามรายการด้านล่าง และกด **create**
+   - **Resource name**: `ai-search-fabrikam-XXXXX` (XXXXX เป็นตัวเลขสุ่ม)
+   - **Subscription:** subscription ที่ผู้เรียนได้รับ
+   - **Resource group:** resource group ที่ผู้เรียนได้รับ
+   - **Region:** region เดียวกับ project และ model deployment (ถ้าไม่ตรงกัน ให้เลือก region ที่ IT Admin อนุมัติ)
+   - **Pricing tier:** Standard S1
+   ![หน้าจอกำหนดรายละเอียด Azure AI Search resource](images/practice-1-step-6-configure-ai-search-resource.png)
+
+7. รอจน resource สร้างเสร็จ จะเห็นว่าเราได้ทำการเชื่อมต่อไปที่ Azure AI Search เพื่อดึง knowledge base มาใช้งาน
+   ![หน้าจอยืนยันการเชื่อมต่อ Azure AI Search](images/practice-1-step-7-confirm-ai-search-connection.png)
+
+8. ไปที่ [Azure Portal](https://portal.azure.com) และเปิด resource group ที่ผู้เรียนได้รับ
+9. เปิด Azure AI Search service ที่สร้างขึ้นมา
+10. ในเมนูทางด้านซ้าย ให้เลือกส่วน **Security + networking** > **Keys** 
+11. ตั้งค่า **API Access control** เป็น **Both** 
+12. ยืนยันการเปลี่ยนแปลง
+13. หลังจากเสร็จสิ้น ให้เปิด tab Foundry portal และ refresh หน้านั้น เพื่อให้การเชื่อมต่อกับ Azure AI Search เป็นปัจจุบัน
+
+## Practice 2: สร้าง Storage account เพื่อเป็น knowledge source
+
+**Primary target:** สร้าง Azure Blob Storage เพื่อเก็บเอกสารตัวอย่างสามไฟล์และเชื่อมกับ Foundry IQ knowledge base
+
+### ขั้นตอนที่ 1: สร้าง Storage Account
+
+1. ใน Web Browser เปิด tab ใหม่และไปที่ [Azure Portal](https://portal.azure.com)
+2. ในแถบค้นหาด้านบน ให้ค้นหา **Storage accounts** และเลือก **Storage accounts** จากรายชื่อ
+3. สร้าง Storage Account โดยใช้การตั้งค่าต่อไปนี้:
+   - **Subscription**: subscription ที่ผู้เรียนได้รับ
+   - **Resource group**: ใช้ resource group เดียวกับ project
+   - **Storage account name**: ชื่อ Storage Account ที่ไม่ซ้ำกัน (เช่น `storageabrikamXXXXX` โดย XXXXX เป็นตัวเลขสุ่ม หรือชื่อของตัวเอง)
+   - **Region**: ใช้ region เดียวกับ project และ model deployment
+   - **Performance**: Standard
+   - **Redundancy**: Locally-redundant storage (LRS)
+4. กด **Review + Create** แล้ว **Create** เพื่อสร้าง Storage Account
+5. รอจน deployment เสร็จสิ้นแล้วเลือก **Go to resource** เพื่อเปิด Storage Account ที่สร้างขึ้นมา
+
+### ขั้นตอนที่ 2: สร้าง Container และ Upload เอกสาร
+
+6. ในหน้า Storage Account เลือกเมนู **Containers** ทางด้านซ้าย
+7. เลือก **+ Container** เพื่อสร้าง container ใหม่
+8. ตั้งค่า:
+   - **Name**: `service-knowledge`
+   - **Public access level**: Private (no anonymous access)
+9. กด **Create**
+10. เลือก container `service-knowledge` ที่เพิ่งสร้าง แล้วกด **Upload** ที่ด้านบน
+11. ในหน้า **Upload blob** ให้เลือกเอกสารทั้งสามไฟล์ต่อไปนี้จาก folder `files` ของ Exercise นี้:
+    - `service-severity-policy.md`
+    - `service-channels.md`
+    - `maintenance-playbook.md`
+12. กด **Upload** เพื่อส่งไฟล์ไปยัง container
+
+### ขั้นตอนที่ 3: สร้าง Knowledge Base ใน Foundry IQ
+
+13.  ในหน้า Foundry IQ เลือก **Create a knowledge base**, ใช้ **Azure Blob Storage** เป็น knowledge source แล้วตั้งค่า:
 
    | Setting | Value |
    |---|---|
    | Name | `kb-fabrikam-service-operations` |
    | Storage container | `service-knowledge` |
-   | Authentication type | `API Key` สำหรับเส้นทาง workshop นี้ |
+   | Authentication type | `API Key` |
    | Content extraction mode | `minimal` |
    | Embedding model | deployment ที่ IT Admin อนุมัติ |
    | Chat completions model | model deployment เดิม |
 
-7. เลือก **Save knowledge base** แล้วรอให้ knowledge source แสดงสถานะ `Active` หรือสถานะพร้อมใช้งานที่เทียบเท่า
+14.  เลือก **Save knowledge base** แล้วรอให้ knowledge source แสดงสถานะ `Active` หรือสถานะพร้อมใช้งานที่เทียบเท่า
 
 ### Checkpoint
 
-- Knowledge base แสดง source สามไฟล์และอยู่ในสถานะพร้อมค้นคืน โดยไม่มี `Almost there` access warning
+- Knowledge base อยู่ในสถานะ Active โดยไม่มี access warning
 
 ---
 
 ## Practice 2: Ground portal-managed Agent และตรวจ citation
 
-**Primary target:** ให้ portal-managed Agent ค้น knowledge base และอ้างอิง Document ID จากเอกสารสังเคราะห์
+**Primary target:** ให้ portal-managed Agent ค้น knowledge base และอ้างอิง Document ID จากเอกสารตัวอย่าง
 
 1. กลับไปที่ `fabrikam-service-operations-iq` แล้วเพิ่ม Foundry IQ knowledge base ที่เพิ่งสร้างในส่วน **Knowledge**
 2. ตั้ง **Instructions** เป็น:
@@ -124,7 +177,7 @@ Fabrikam ต้องการให้ Agent ตอบนโยบายจา�
 
 - Python application เรียก Agent version ที่บันทึกไว้ใน portal และคืนคำตอบพร้อม citation จาก knowledge base
 
-> **💡 Fallback:** ถ้า Foundry IQ provisioning ล้มเหลว ให้ใช้ IT-prepared knowledge base และ Agent name/version ที่แจกเฉพาะในชั้นเรียน จากนั้นทำ Practice 2–3 ต่อโดยไม่สร้าง Search resource ใหม่
+> **💡 Fallback:** ถ้า Foundry IQ ไม่สามารถสร้างขึ้นมาใช้งานได้ ให้ศึกษาจากการดูตัวอย่างของวิทยากร และติดต่อฝ่าย IT Admin เพื่อตรวจสอบสิทธิ์การใช้งานภายหลัง
 
 ---
 
