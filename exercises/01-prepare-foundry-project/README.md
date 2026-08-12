@@ -39,20 +39,21 @@
 
    ```bash
    az account show --query "{account:name,user:user.name}" --output table
+  
    ```
 
-6. แทน `<assigned-resource-group>` ด้วยชื่อที่ได้รับ แล้วตรวจว่าเข้าถึงได้:
+6. แสดงรายการ resource group ที่บัญชีผู้เรียนเข้าถึงได้:
 
    ```bash
-   az group show --name <assigned-resource-group> --query "{name:name,location:location}" --output table
+   az group list --query "[].{name:name,location:location}" --output table
    ```
 
-7. จดชื่อ project ที่จะใช้ตามรูปแบบ `foundry-serviceops-<student-number>` โดยไม่ใส่ชื่อบุคคลหรือข้อมูลลูกค้า
+7. จดชื่อ project ที่จะใช้ตามรูปแบบ `foundry-serviceops-<resource-group-suffix>` เช่น `foundry-serviceops-001` 
 
 ### Checkpoint
 
-- คำสั่ง `python -m service_ops check` แสดง base tools เป็น `READY`
-- `az group show` แสดงเฉพาะ resource group ที่ IT Admin มอบหมายได้สำเร็จ
+- คำสั่ง `python -m service_ops check` แสดงรายการเครื่องมือพื้นฐานที่จะใช้ในการอบรม (base tools) เป็น `READY`
+- `az group list` แสดงรายการ resource group ที่บัญชีผู้เรียนเข้าถึงได้ และพบ resource group ที่ IT Admin มอบหมาย
 
 > **💡 Tip:** ถ้า `az login` สำเร็จแต่ portal ยังไม่เห็นสิทธิ์ ให้รอสักครู่แล้ว sign out/sign in ใหม่ การกระจาย RBAC อาจใช้เวลา
 
@@ -64,45 +65,75 @@
 
 1. เปิด [Microsoft Foundry portal](https://ai.azure.com) แล้ว sign in ด้วยบัญชีเดียวกับ Azure CLI
 
-2. ตรวจว่าใช้ประสบการณ์ **New Foundry** ตามที่ผู้สอนสาธิต แล้วเลือก **Start building**
+2. ตรวจว่ามีการเปิดใช้โหมด **New Foundry** ตามที่ผู้สอนสาธิต แล้วเลือก **Start building**
+   ![เปิดโหมด New Foundry และปุ่ม Start building](images/practice-2-step-2-enable-new-foundry-and-start-building.png)
 
-3. ถ้า IT Admin เตรียม project ไว้แล้ว ให้เลือก project นั้นและข้ามไปขั้นตอนที่ 6
+3. เลือกสร้าง project ใหม่ แล้วกรอกชื่อจาก Practice 1
 
-4. เลือกสร้าง project ใหม่ แล้วกรอกชื่อจาก Practice 1
-
-5. เปิด **Advanced options** และตรวจค่าก่อนเลือก **Create**:
+4. เปิด **Advanced options** และตรวจค่าก่อนเลือก **Create**:
 
    - **Subscription:** subscription ที่ IT Admin ระบุ
-   - **Resource group:** resource group ที่ได้รับมอบหมายเท่านั้น
-   - **Region:** region ที่ผู้สอนยืนยัน
+   - **Resource group:** เลือก resource group ที่เป็นของตัวเองเท่านั้น
+   - **Region:** region ที่สามารถเลือกได้ เช่น **East US 2**, หรือ region ที่ IT Admin ยืนยันว่าใช้ได้
    - **Foundry resource:** ใช้ชื่อที่กำหนดให้หรือค่าที่ IT Admin เตรียมไว้
 
-6. เปิด **Discover > Models** แล้วค้นหา model ที่ผู้สอนกำหนด
+5. รอจน project สร้างเสร็จ แล้วเปิด project home page เพื่อตรวจ **Project endpoint** และ **Models**
+6. เปิด **Discover > Models** แล้วลองสำรวจ model gpt-5.5  หรือที่สามารถเลือกได้
+   ![หน้า Discover Models สำหรับสำรวจรายการโมเดล](images/practice-2-step-6-open-discover-models.png)
 
-7. เปิด model card แล้วเปรียบเทียบอย่างน้อยสองรายการต่อไปนี้กับ model ทางเลือกที่ผู้สอนระบุ:
-
+7. กลับมาที่ Discover > Models และให้กดเปิด Compare model
+    แล้วเปรียบเทียบอย่างน้อยสองรายการต่อไปนี้กับ model อีก 2 ตัวที่สนใจในตาราง:
+   ![หน้าจอ Compare models สำหรับเทียบคุณสมบัติของโมเดล](images/practice-2-step-7-open-compare-models.png)
    - Input/output modality
    - Context window
    - Supported region หรือ deployment type
    - Limitation หรือ use case ที่ระบุใน model card
 
-8. เลือก **Deploy** สำหรับ approved model เท่านั้น และใช้ deployment name ที่ผู้สอนกำหนด
+8. เลือก model **gpt-4o** และกด **Deploy** > **Custom Setting** และกำหนดค่าต่อไปนี้:
 
-9. ถ้ามี deployment เตรียมไว้แล้ว ให้เลือก deployment นั้นแทนการสร้างซ้ำ
+   - Deployment name: 
+   ```
+   gpt-4o
+   ```
+   - Deployment type: 
+   ```
+   Global Standard
+   ```
+   - Token limit: 
+   ```
+   500,000-1,000,000
+   ```
+   - Guardrails: 
+   ```
+   DefaultV2
+   ```
 
-10. เปิด model playground แล้วใส่ **Instructions**:
+9. กด **Deploy** แล้วรอจน deployment สร้างเสร็จ จากนั้นตรวจชื่อ deployment ใน Models
 
-    ```text
-    You are a careful service-operations assistant. Use only the information supplied in the conversation. State clearly when information is missing.
-    ```
+10.  เปิด model playground แล้วใส่ **Instructions**:
 
-11. ส่ง prompt ต่อไปนี้:
+   ```text
+   You are a careful service-operations assistant. Use only the information supplied in the conversation. State clearly when information is missing.
+   ```
 
-    ```text
-    A service desk wants to reduce response time without hiding unresolved incidents. Suggest three measurable checks and explain why each matters.
-    ```
+11.  ส่ง prompt ต่อไปนี้:
 
-12. ตรวจว่าคำตอบเสนอ measurable checks และไม่อ้างข้อมูลจริงของ Fabrikam ที่ยังไม่ได้ให้
+   ```text
+   A service desk wants to reduce response time without hiding unresolved incidents. Suggest three measurable checks and explain why each matters.
+   ```
+
+12.  ตรวจว่าคำตอบเสนอ measurable checks และไม่อ้างข้อมูลจริงขององค์กร Fabrikam ที่ยังไม่ได้ให้
+
+### ตรวจสอบ project และ model deployment
+
+1. จากเมนูด้านบนของ Foundry portal ให้เลือก **Home** เพื่อกลับมาหน้าแรก และสังเกต:
+   1. ชื่อ project 
+   2. API key
+   3. Project endpoint
+   4. Azure OpenAI Endpoint
+   ![หน้า Project home ที่แสดง API key และ endpoint ของโปรเจกต์](images/practice-2-verify-project-home-api-key-and-endpoints.png)
+2. Login เข้า https://portal.azure.com/ ด้วยบัญชีเดียวกับ Foundry portal แล้วกดเปิด resource group ที่สร้าง project ว่าอยู่ในรายการ **Resource groups** ของ Azure portal
+   ![หน้า Azure portal ที่ยืนยัน resource group อยู่ในรายการ](images/practice-2-verify-resource-group-in-azure-portal.png)
 
 ### Checkpoint
 
@@ -110,7 +141,9 @@
 - Approved model deployment เปิดใน playground และตอบ test prompt ได้
 - ผู้เรียนอธิบายความต่างจาก model ทางเลือกได้อย่างน้อยสองข้อจาก model cards
 
-> **⚠️ Note:** ถ้า quota หรือสิทธิ์ไม่อนุญาตให้ deploy ห้ามลอง region หรือ resource group อื่นเอง ให้ใช้ IT-prepared deployment และบันทึกว่าใช้ fallback
+> **⚠️ Note:** ถ้า quota หรือสิทธิ์ไม่อนุญาตให้ deploy ห้ามลอง region หรือ resource group ให้ตรวจสอบกับฝ่าย IT Admin ก่อนเปลี่ยนค่าใด ๆ 
+> 
+> การ deploy model ต้องใช้ role ที่กำหนดให้ account ผู้เรียนอย่าง Foundry Project Manager และ Cognitive Services User role ของ resource group ที่ฝ่าย IT Admin สร้างให้
 
 ---
 
@@ -126,7 +159,7 @@
    cp .env.example .env
    ```
 
-3. เปิด `.env` แล้วแทนค่าต่อไปนี้:
+3. เปิดไฟล์ `.env` แล้วแทนค่าต่อไปนี้:
 
    ```dotenv
    FOUNDRY_PROJECT_ENDPOINT=<project-endpoint>
@@ -134,30 +167,33 @@
    FOUNDRY_AGENT_NAME=fabrikam-service-operations-agent
    ```
 
-4. บันทึกไฟล์ แล้วตรวจว่า Git จะไม่ติดตาม `.env`:
+4. บันทึกไฟล์ แล้วตรวจว่า Git จะไม่มีการ track ไฟล์ `.env` โดยจะไม่มีการแสดงชื่อไฟล์ `.env` ในผลลัพธ์ของคำสั่ง:
 
    ```bash
    git status --short
    ```
 
-   เราไม่ควรเห็น `.env` ในรายการ
-
 5. เปิด **Foundry Toolkit** ใน VS Code แล้วเลือก **Microsoft Foundry Resources > Set Default Project**
 
 6. เลือก project เดียวกับที่สร้างใน Practice 2 แล้วเปิด **Models** เพื่อตรวจชื่อ deployment
 
-7. ถ้า Foundry Toolkit ไม่แสดงผล ให้ใช้ portal เป็น fallback โดยยืนยัน project endpoint และ deployment จาก project home page
+7. ถ้า Foundry Toolkit ไม่แสดงผล ให้ใช้ portal ทดแทน โดยให้แน่ใจว่าการกำหนดค่าของ project endpoint และ deployment ตรงกับที่อยู่บน project home page
 
-8. รัน readiness check แบบเข้มงวด:
+8. รันคำสั่ง check:
 
    ```bash
    python -m service_ops check --strict
    ```
+   จะเห็นข้อความสุดท้ายว่า
+   
+   ```   
+   READY  .env configuration: project endpoint and model are set
+   ```
 
 ### Checkpoint
 
-- `.env` มี project endpoint และ model deployment โดยไม่มี key หรือ credential
-- `python -m service_ops check --strict` จบโดยไม่มี `ERROR` หรือ `ACTION`
+- ไฟล์`.env` มี project endpoint และ model deployment โดยไม่มี key หรือ credential
+- `python -m service_ops check --strict` สามารถรันผ่านได้โดยไม่มี `ERROR` หรือ `ACTION`
 - พบ model deployment ใน Foundry Toolkit หรือยืนยันผ่าน portal fallback
 
 ---

@@ -91,22 +91,21 @@ Azure account และ GitHub account อาจใช้อีเมลคน�
    az account show --query "{account:name,user:user.name}" --output table
    ```
 
-6. แทน `<assigned-resource-group>` ด้วยชื่อที่ IT Admin แจ้ง แล้วรัน:
+6. แสดงรายการ Resource group ที่บัญชีผู้เรียนเข้าถึงได้:
 
    ```bash
-   az group show \
-     --name <assigned-resource-group> \
-     --query "{name:name,location:location}" \
+    az group list \
+       --query "[].{name:name,location:location}" \
      --output table
    ```
 
-7. ตรวจว่าชื่อ Resource group ตรงกับที่ได้รับมอบหมายทุกตัวอักษร
+7. ตรวจว่ามี Resource group ที่ได้รับมอบหมายอยู่ในรายการ
 
 ### Checkpoint: Azure account และ Resource group
 
 - `az login --use-device-code` สำเร็จ
 - Account name และ Username ตรงกับข้อมูลจาก IT
-- `az group show` แสดง Resource group ที่ได้รับมอบหมาย
+- `az group list` แสดงรายการ Resource group ที่บัญชีผู้เรียนเข้าถึงได้ และพบ Resource group ที่ได้รับมอบหมาย
 
 > **⚠️ Note:** หาก Login สำเร็จแต่เข้าถึง Resource group ไม่ได้ ให้รอการกระจาย RBAC แล้ว Sign out/Sign in ใหม่ ห้ามเปลี่ยนไปใช้ Resource group อื่นเอง
 
