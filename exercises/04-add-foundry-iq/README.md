@@ -19,35 +19,9 @@ Fabrikam ต้องการให้ Agent ตอบคำถามผู้�
 
 ---
 
-## Practice 1: เตรียม knowledge source
 
-**Primary target:** สร้าง knowledge source จากเอกสารตัวอย่างสามไฟล์และตรวจว่า source พร้อมใช้งาน
 
-1. เปิด [Microsoft Foundry portal](https://ai.azure.com) แล้วเลือก project เดิมจาก Exercise 1
-2. เปิด **Build > Agents** แล้วเลือก Agent เดิม หรือสร้าง portal-managed Agent ชื่อ `fabrikam-service-operations-iq` โดยใช้ model deployment ที่ผู้สอนอนุมัติ
-3. ในส่วนเมนู **Build** > **Knowledge** และเลื่อนลงมาด้านล่าง
-4. เราสามารถเลือก knowledge base ที่มีอยู่ก่อนแล้วได้ แต่ในที่นีี้เราจะสร้าง Azure AI Search ขึ้นใหม่ ซึ่งเป็นกลไกสำคัญของ Foundry IQ knowledge base
-5. เลือก **Create new resource**
-   ![หน้าจอสร้าง Azure AI Search resource ใหม่](images/practice-1-step-5-create-ai-search-resource.png)
-6. กรอกรายละเอียดตามรายการด้านล่าง และกด **create**
-   - **Resource name**: `ai-search-fabrikam-XXXXX` (XXXXX เป็นตัวเลขสุ่ม)
-   - **Subscription:** subscription ที่ผู้เรียนได้รับ
-   - **Resource group:** resource group ที่ผู้เรียนได้รับ
-   - **Region:** region เดียวกับ project และ model deployment (ถ้าไม่ตรงกัน ให้เลือก region ที่ IT Admin อนุมัติ)
-   - **Pricing tier:** Standard S1
-   ![หน้าจอกำหนดรายละเอียด Azure AI Search resource](images/practice-1-step-6-configure-ai-search-resource.png)
-
-7. รอจน resource สร้างเสร็จ จะเห็นว่าเราได้ทำการเชื่อมต่อไปที่ Azure AI Search เพื่อดึง knowledge base มาใช้งาน
-   ![หน้าจอยืนยันการเชื่อมต่อ Azure AI Search](images/practice-1-step-7-confirm-ai-search-connection.png)
-
-8. ไปที่ [Azure Portal](https://portal.azure.com) และเปิด resource group ที่ผู้เรียนได้รับ
-9. เปิด Azure AI Search service ที่สร้างขึ้นมา
-10. ในเมนูทางด้านซ้าย ให้เลือกส่วน **Security + networking** > **Keys** 
-11. ตั้งค่า **API Access control** เป็น **Both** 
-12. ยืนยันการเปลี่ยนแปลง
-13. หลังจากเสร็จสิ้น ให้เปิด tab Foundry portal และ refresh หน้านั้น เพื่อให้การเชื่อมต่อกับ Azure AI Search เป็นปัจจุบัน
-
-## Practice 2: สร้าง Storage account เพื่อเป็น knowledge source
+## Practice 1: สร้าง Storage account เพื่อเป็น knowledge source
 
 **Primary target:** สร้าง Azure Blob Storage เพื่อเก็บเอกสารตัวอย่างสามไฟล์และเชื่อมกับ Foundry IQ knowledge base
 
@@ -79,6 +53,39 @@ Fabrikam ต้องการให้ Agent ตอบคำถามผู้�
     - `service-channels.md`
     - `maintenance-playbook.md`
 12. กด **Upload** เพื่อส่งไฟล์ไปยัง container
+
+## Practice 2: เตรียม Azure AI Search resource
+
+**Primary target:** สร้าง Azure AI Search resource เพื่อเชื่อมต่อกับ Foundry IQ knowledge base
+
+1. ใน Web Browser เปิด tab ใหม่และไปที่ [Azure Portal](https://portal.azure.com)
+2. ในแถบค้นหาด้านบน ให้ค้นหา **Azure AI Search** และเลือก **Azure AI Search** จากรายชื่อ
+3. เลือก **Create new resource**
+4. กรอกรายละเอียดตามรายการด้านล่าง และกด **create**
+   - **Resource name**: `ai-search-fabrikam-XXXXX` (XXXXX เป็นตัวเลขสุ่ม)
+   - **Subscription:** subscription ที่ผู้เรียนได้รับ
+   - **Resource group:** resource group ที่ผู้เรียนได้รับ
+   - **Region:** region เดียวกับ project และ model deployment (ถ้าไม่ตรงกัน ให้เลือก region ที่ IT Admin อนุมัติ)
+   - **Pricing tier:** Standard S1
+
+5. รอจน resource สร้างเสร็จ 
+6.  ในเมนูทางด้านซ้าย ให้เลือกส่วน **Security + networking** > **Keys** 
+7.  ตั้งค่า **API Access control** เป็น **Both** 
+8.  ยืนยันการเปลี่ยนแปลง
+
+## Practice 3: เตรียม knowledge source
+
+**Primary target:** สร้าง knowledge source จากเอกสารตัวอย่างสามไฟล์และตรวจว่า source พร้อมใช้งาน
+
+1. เปิด [Microsoft Foundry portal](https://ai.azure.com) แล้วเลือก project เดิมจาก Exercise 1
+2. เปิด **Build > Agents** แล้วเลือก Agent เดิม หรือสร้าง portal-managed Agent ชื่อ `fabrikam-service-operations-iq` โดยใช้ model deployment ที่ผู้สอนอนุมัติ
+3. ในส่วนเมนู **Build** > **Knowledge** และเลื่อนลงมาด้านล่าง
+4. เในที่นีี้เราจะเลือก Azure AI Search ที่มีการสร้างเตรียมไว้ ซึ่งเป็นกลไกสำคัญของ Foundry IQ knowledge base
+   ![หน้าจอสร้าง Azure AI Search resource ใหม่](images/practice-1-step-5-create-ai-search-resource.png)
+
+5. เลือก AI Search ที่สร้างไว้ก่อนหน้านี้ และเลือกการเชื่อมต่อแบบ API Key และกด **Connect**
+6. จะเห็นว่าเราได้ทำการเชื่อมต่อไปที่ Azure AI Search เพื่อดึง knowledge base มาใช้งาน
+
 
 ### ขั้นตอนที่ 3: สร้าง Knowledge Base ใน Foundry IQ
 
