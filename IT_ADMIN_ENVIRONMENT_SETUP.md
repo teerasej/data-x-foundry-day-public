@@ -157,6 +157,13 @@ Complete every check without administrator credentials in the learner browser or
 - [ ] The agent retrieves grounded content through its own managed identity.
 - [ ] The learner cannot assign `Owner`, `User Access Administrator`, or `Role Based Access Control Administrator` and cannot assign roles outside the dedicated resource group.
 - [ ] External MCP and required package feeds are reachable.
+- [ ] Local MCP starts on port `8000` and a second terminal can invoke both exposed tools.
+- [ ] Foundry IQ returns citations from the three synthetic knowledge documents through the portal-managed Agent.
+- [ ] The visual workflow Preview and client invocation work, or the Agent Framework fallback is recorded as the approved class path.
+- [ ] `SequentialBuilder` runs Summarizer, Classifier, and Resolver in order with the pinned lock file.
+- [ ] If the optional extension is offered, Teams/Copilot licensing, app policy, publish scope, Azure Bot Service, and cleanup ownership are confirmed separately.
+
+> **Workflow lifecycle:** Microsoft has announced retirement of Foundry workflows on December 1, 2026. Rehearse the visual path only while it remains available and keep Exercise 7 as the supported Agent Framework fallback.
 
 ## 8. Cleanup
 

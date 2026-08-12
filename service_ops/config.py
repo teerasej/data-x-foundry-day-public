@@ -52,3 +52,21 @@ class Settings:
         if missing:
             joined = ", ".join(missing)
             raise ValueError(f"Set {joined} in .env before running the agent.")
+
+    def missing_for_managed_agent(self) -> tuple[str, ...]:
+        missing: list[str] = []
+        if not self.foundry_project_endpoint or "YOUR-" in self.foundry_project_endpoint:
+            missing.append("FOUNDRY_PROJECT_ENDPOINT")
+        if not self.foundry_agent_name:
+            missing.append("FOUNDRY_AGENT_NAME")
+        if not self.foundry_agent_version:
+            missing.append("FOUNDRY_AGENT_VERSION")
+        if not self.foundry_iq_mcp_endpoint:
+            missing.append("FOUNDRY_IQ_MCP_ENDPOINT")
+        return tuple(missing)
+
+    def require_managed_agent(self) -> None:
+        missing = self.missing_for_managed_agent()
+        if missing:
+            joined = ", ".join(missing)
+            raise ValueError(f"Set {joined} in .env before running the Foundry IQ agent.")

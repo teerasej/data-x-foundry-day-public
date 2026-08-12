@@ -68,6 +68,7 @@ def collect_checks(*, bootstrap: bool = False) -> list[CheckResult]:
         _command_check("az", "Azure CLI"),
         _module_check("agent_framework"),
         _module_check("agent_framework.foundry"),
+        _module_check("agent_framework.orchestrations"),
         _module_check("azure.identity"),
         _module_check("dotenv"),
         _module_check("mcp"),

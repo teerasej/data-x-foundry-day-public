@@ -34,11 +34,11 @@
 |---|---|---|
 | 1 | [เตรียม Microsoft Foundry project](./exercises/01-prepare-foundry-project/README.md) | พร้อมใช้งาน |
 | 2 | [สร้าง Service Operations Agent](./exercises/02-build-service-operations-agent/README.md) | พร้อมใช้งาน |
-| 3 | [เชื่อมต่อ Agent กับ MCP](./exercises/03-extend-agent-with-mcp/README.md) | จะเพิ่มใน Review Gate ถัดไป |
-| 4 | [เพิ่ม Foundry IQ](./exercises/04-add-foundry-iq/README.md) | จะเพิ่มใน Review Gate ถัดไป |
-| 5 | [สร้าง visual workflow](./exercises/05-build-foundry-workflow/README.md) | จะเพิ่มใน Review Gate ถัดไป |
-| 6 | [สร้าง code-first Agent Framework agent](./exercises/06-build-agent-framework-agent/README.md) | จะเพิ่มใน Review Gate ถัดไป |
-| 7 | [สร้าง multi-agent solution](./exercises/07-build-multi-agent-solution/README.md) | จะเพิ่มใน Review Gate ถัดไป |
+| 3 | [เชื่อมต่อ Agent กับ MCP](./exercises/03-extend-agent-with-mcp/README.md) | พร้อมใช้งาน |
+| 4 | [เพิ่ม Foundry IQ](./exercises/04-add-foundry-iq/README.md) | พร้อมใช้งาน; ต้องผ่าน environment gate |
+| 5 | [สร้าง visual workflow](./exercises/05-build-foundry-workflow/README.md) | พร้อมใช้งาน; Preview และ retire 1 Dec 2026 |
+| 6 | [สร้าง code-first Agent Framework agent](./exercises/06-build-agent-framework-agent/README.md) | พร้อมใช้งาน |
+| 7 | [สร้าง multi-agent solution](./exercises/07-build-multi-agent-solution/README.md) | พร้อมใช้งาน |
 | Optional | [เผยแพร่ไปยัง Teams และ Microsoft 365 Copilot](./exercises/optional-teams-copilot/README.md) | `ต้องตรวจสอบก่อนเริ่มอบรม` |
 
 ## Application commands
@@ -47,12 +47,12 @@
 python -m service_ops check
 python -m service_ops agent
 python -m service_ops mcp-server
-python -m service_ops mcp-agent
-python -m service_ops workflow
-python -m service_ops multi-agent
+python -m service_ops mcp-agent --source local --prompt "..."
+python -m service_ops workflow --mode local
+python -m service_ops multi-agent --feedback "..."
 ```
 
-ใน Review Gate นี้ คำสั่ง `check` และ `agent` เป็นส่วนที่ผู้เรียนใช้งาน ส่วนคำสั่งที่เหลือจะแสดงข้อความบอก Exercise ที่ต้องทำต่อไป
+Starter code มี `TODO Exercise ...` ให้ผู้เรียนเติมตามลำดับ ห้ามข้ามไป copy private instructor solution ทุก Exercise ใช้ package `service_ops`, project และ model deployment เดิม
 
 ## การเก็บข้อมูลสำคัญ
 
