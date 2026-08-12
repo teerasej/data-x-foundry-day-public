@@ -99,7 +99,7 @@ def check_dependency_lock() -> list[str]:
         if line.strip() and not line.startswith("#")
     ]
     locked = {
-        line.split("==", maxsplit=1)[0].casefold()
+        line.casefold()
         for line in (ROOT / "requirements.lock").read_text(encoding="utf-8").splitlines()
         if "==" in line
     }
@@ -107,9 +107,10 @@ def check_dependency_lock() -> list[str]:
         if "==" not in requirement:
             errors.append(f"Direct dependency is not exactly pinned: {requirement}")
             continue
-        name = requirement.split("==", maxsplit=1)[0].casefold()
-        if name not in locked:
-            errors.append(f"Direct dependency missing from requirements.lock: {requirement}")
+        if requirement.casefold() not in locked:
+            errors.append(
+                f"Direct dependency version missing from requirements.lock: {requirement}"
+            )
 
     project = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     runtime_dependencies = project["project"]["dependencies"]

@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from mcp.server import MCPServer
+from mcp.server.fastmcp import FastMCP
 
 from service_ops.config import REPOSITORY_ROOT
 
@@ -35,21 +35,15 @@ def summarize_queue(path: Path = SERVICE_STATUS_FILE) -> dict[str, Any]:
     return load_service_status(path)["queue_summary"]
 
 
-def create_mcp_server() -> MCPServer:
+def create_mcp_server(*, host: str = "127.0.0.1", port: int = 8000) -> FastMCP:
     """Create the local MCP server. Complete this function in Exercise 3."""
-    # TODO Exercise 3: create MCPServer and register both helper functions with @server.tool().
+    # TODO Exercise 3: create FastMCP and register both helper functions with @server.tool().
+    del host, port
     raise NotImplementedError(
         "Complete create_mcp_server() by following Exercise 3, Practice 2."
     )
 
 
 def run_server(*, host: str = "127.0.0.1", port: int = 8000) -> None:
-    server = create_mcp_server()
-    server.run(
-        transport="streamable-http",
-        host=host,
-        port=port,
-        streamable_http_path="/mcp",
-        json_response=True,
-        stateless_http=True,
-    )
+    server = create_mcp_server(host=host, port=port)
+    server.run(transport="streamable-http")

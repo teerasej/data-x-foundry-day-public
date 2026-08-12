@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 from service_ops.config import REPOSITORY_ROOT, Settings
@@ -32,6 +33,29 @@ def _module_check(module: str) -> CheckResult:
     if available:
         return CheckResult("READY", f"Python import: {module}", "available")
     return CheckResult("ERROR", f"Python import: {module}", "missing from .venv")
+
+
+def _mcp_compatibility_check() -> CheckResult:
+    try:
+        from mcp.server.fastmcp import FastMCP
+        from mcp.types import InitializeResult
+
+        installed_version = version("mcp")
+    except (ImportError, PackageNotFoundError) as exc:
+        return CheckResult("ERROR", "MCP compatibility", f"MCP v1 API unavailable: {exc}")
+
+    compatible = (
+        installed_version == "1.29.0"
+        and "protocolVersion" in InitializeResult.model_fields
+        and callable(FastMCP)
+    )
+    if compatible:
+        return CheckResult("READY", "MCP compatibility", "mcp 1.29.0 with v1 schema")
+    return CheckResult(
+        "ERROR",
+        "MCP compatibility",
+        f"expected mcp 1.29.0 with protocolVersion; found {installed_version}",
+    )
 
 
 def _azure_sign_in_check() -> CheckResult:
@@ -71,7 +95,7 @@ def collect_checks(*, bootstrap: bool = False) -> list[CheckResult]:
         _module_check("agent_framework.orchestrations"),
         _module_check("azure.identity"),
         _module_check("dotenv"),
-        _module_check("mcp"),
+        _mcp_compatibility_check(),
     ]
     if bootstrap:
         return results

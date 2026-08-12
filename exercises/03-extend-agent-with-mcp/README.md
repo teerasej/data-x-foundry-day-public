@@ -1,20 +1,18 @@
 # Exercise 3: เชื่อมต่อ Agent กับ MCP
 
-Fabrikam ต้องการให้ Agent ใช้ข้อมูลนอก prompt ได้อย่างควบคุม ใน Exercise นี้เราจะเชื่อมต่อ Microsoft Learn MCP สำหรับเอกสาร Microsoft และสร้าง local MCP server ที่ให้บริการสถานะระบบจากข้อมูลสังเคราะห์
+Fabrikam ต้องการให้ Agent เรียกใช้ข้อมูลและระบบนอก Agent ได้ และต้องอยู่ภายใต้การควบคุม ใน Exercise นี้เราจะเชื่อมต่อ Microsoft Learn MCP สำหรับข้อมูลจากคลังเอกสารของ Microsoft และสร้าง local MCP server ที่ให้บริการสถานะระบบจากข้อมูลสังเคราะห์
 
-> **License:** Original workshop content © 2026 Amaround Co., Ltd. All rights reserved. Third-party notices are recorded in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md).
-
-ใช้เวลาประมาณ **60 นาที** และใช้ Foundry project, model deployment, `.venv` และ `.env` เดิมจาก Exercise 1–2
+> **License และค่าใช้จ่าย:** เนื้อหาต้นฉบับเป็นลิขสิทธิ์ของ Amaround Co., Ltd. แบบ All rights reserved และมีส่วนที่ดัดแปลงจาก MicrosoftLearning ภายใต้ MIT License ตาม [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md) การเรียก model ใช้ Azure quota ของสภาพแวดล้อมอบรม
 
 ## Prerequisites
 
 - `python -m service_ops check` ไม่มีสถานะ `ERROR`
-- `az login --use-device-code` สำเร็จ และบัญชีอยู่ใน resource group ที่ได้รับมอบหมาย
+- ทำการ sign in ภายใน codespace ด้วย azure account ผ่านคำสั่ง `az login --use-device-code` สำเร็จ และบัญชีอยู่ใน resource group ที่ได้จากฝั่ง IT
 - ทำ `service_ops/agent.py` จาก Exercise 2 เสร็จแล้ว
-- ตรวจไฟล์ [service-status.json](./files/service-status.json) และยืนยันว่าเป็นข้อมูลสังเคราะห์
+- ตรวจไฟล์ [service-status.json](./files/service-status.json)
 - Network อนุญาต `https://learn.microsoft.com/api/mcp`; ถ้าถูกบล็อกให้ใช้ local MCP ใน Practice 2–3
 
-> **⚠️ Note:** MCP เปรียบเหมือนปลั๊กพ่วงมาตรฐานที่ทำให้ Agent ต่อกับเครื่องมือหลายชนิดได้ แต่เรายังต้องเลือกแหล่งที่เชื่อถือได้และจำกัดข้อมูลที่ส่งออก ห้ามส่ง credential, production data หรือข้อมูลลูกค้าไปยัง MCP server
+> **⚠️ Note:** MCP เปรียบเหมือนปลั๊กพ่วงมาตรฐานที่ทำให้ Agent ต่อกับเครื่องมือหลายชนิดได้ แต่เรายังต้องเลือกแหล่งข้อมูล และระบบที่เชื่อถือได้ และสามารถจำกัดข้อมูลที่ส่งออกไปยัง mcp ได้ ห้ามส่ง credential, production data หรือข้อมูลลูกค้าไปยัง MCP server
 
 ---
 
@@ -50,7 +48,7 @@ Fabrikam ต้องการให้ Agent ใช้ข้อมูลนอ�
    )
    ```
 
-   ใน workshop นี้เราใช้ `never_require` เฉพาะ endpoint ที่ผู้สอนตรวจแล้วและ prompt ที่ผู้เรียนเป็นผู้เริ่มเอง ระบบ production ควรประเมิน approval และ allow-list ตามความเสี่ยง
+   ใน workshop นี้เราใช้ `never_require` เฉพาะ endpoint ที่มีการตรวจสอบแล้วและ prompt ที่ผู้เรียนเป็นผู้เริ่มเอง ในระบบที่เป็น production พลแนะนำว่าพวกเราควรประเมิน approval ให้กับรายการและประเภทของ MCP ตามความเสี่ยง
 
 3. บันทึกไฟล์ แล้วรัน:
 
@@ -74,9 +72,14 @@ Fabrikam ต้องการให้ Agent ใช้ข้อมูลนอ�
 2. แทนส่วน `TODO Exercise 3` ใน `create_mcp_server()` ด้วยโค้ดนี้:
 
    ```python
-   server = MCPServer(
+   server = FastMCP(
        name="fabrikam-service-status",
        instructions="Return synthetic training data only.",
+       host=host,
+       port=port,
+       streamable_http_path="/mcp",
+       json_response=True,
+       stateless_http=True,
    )
 
    @server.tool()
@@ -91,6 +94,8 @@ Fabrikam ต้องการให้ Agent ใช้ข้อมูลนอ�
 
    return server
    ```
+
+    Workshop นี้ pin `mcp==1.29.0` ซึ่งเป็น MCP v1 maintenance release ที่เข้ากันได้กับ Agent Framework รุ่นที่ใช้ ห้าม upgrade เป็น MCP v2 จนกว่า Agent Framework จะรองรับอย่างเป็นทางการ
 
 3. บันทึกไฟล์ เปิด Terminal แรก แล้วรัน:
 
