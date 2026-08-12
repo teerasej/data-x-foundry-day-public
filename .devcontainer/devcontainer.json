@@ -45,7 +45,7 @@
     }
   },
   "postCreateCommand": "bash .devcontainer/bootstrap.sh",
-  "postStartCommand": "bash .devcontainer/health-check.sh --bootstrap",
+  "postStartCommand": "bash .devcontainer/bootstrap.sh",
   "postAttachCommand": "bash .devcontainer/health-check.sh",
   "waitFor": "postCreateCommand",
   "remoteUser": "vscode"
