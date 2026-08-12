@@ -66,9 +66,9 @@ Fabrikam ต้องการให้ Agent เรียกใช้ข้อ�
 
 ## Practice 2: สร้าง local service-status MCP server
 
-**Primary target:** เปิดเผยฟังก์ชันอ่านสถานะสังเคราะห์เป็น MCP tools ผ่าน Streamable HTTP ที่ port 8000
+**Primary target:** ลองสร้าง function สำหรับอ่านข้อมูล ให้กลายเป็น MCP tools ผ่าน HTTP ที่ port 8000
 
-1. เปิด `service_ops/mcp_server.py` แล้วตรวจว่า `find_service_status()` และ `summarize_queue()` อ่านเฉพาะไฟล์ของ Exercise นี้
+1. เปิด `service_ops/mcp_server.py` แล้วลองสำรวจการทำงานของฟังก์ชัน `find_service_status()` และ `summarize_queue()` ในส่วนการทำงาน ว่าอ่านเฉพาะไฟล์ของ Exercise นี้
 2. แทนส่วน `TODO Exercise 3` ใน `create_mcp_server()` ด้วยโค้ดนี้:
 
    ```python
@@ -95,15 +95,16 @@ Fabrikam ต้องการให้ Agent เรียกใช้ข้อ�
    return server
    ```
 
-    Workshop นี้ pin `mcp==1.29.0` ซึ่งเป็น MCP v1 maintenance release ที่เข้ากันได้กับ Agent Framework รุ่นที่ใช้ ห้าม upgrade เป็น MCP v2 จนกว่า Agent Framework จะรองรับอย่างเป็นทางการ
+   > ⚠️🤔 Workshop นี้มีการกำหนดใช้ package `mcp==1.29.0` ซึ่งเป็น MCP v1 maintenance release ที่เข้ากันได้กับ Microsoft Agent Framework รุ่นที่ใช้ ห้าม upgrade เป็น MCP v2 จนกว่า Agent Framework จะรองรับอย่างเป็นทางการ
 
-3. บันทึกไฟล์ เปิด Terminal แรก แล้วรัน:
+3. บันทึกไฟล์ 
+4. เปิด Terminal ใหม่ แล้วรันคำสั่งด้านล่างเพื่อเริ่มการทำงานของ local MCP server:
 
    ```bash
    python -m service_ops mcp-server
    ```
 
-4. รอจน server ทำงานที่ `http://127.0.0.1:8000/mcp` และ Codespaces แสดง forwarded port 8000
+5. รอจน server ทำงานที่ `http://127.0.0.1:8000/mcp` และ Codespaces แสดง forwarded port 8000
 
 ### Checkpoint
 
@@ -128,7 +129,9 @@ Fabrikam ต้องการให้ Agent เรียกใช้ข้อ�
    python -m service_ops mcp-agent --source local --prompt "ตรวจสถานะ Customer Portal และสรุปคิวงานปัจจุบัน ระบุชัดเจนว่าเป็น synthetic training data"
    ```
 
-4. ตรวจคำตอบว่ามี `degraded`, จำนวนคำขอที่รอ `14` และคำเตือนว่าไม่ใช่ production data
+4. ตรวจคำตอบว่า
+   1. สถานะการทำงานของ customer portal มี `degraded`
+   2. จำนวนคำขอที่รอการทำงานมีจำนวน `14` request และคำเตือนว่าไม่ใช่ production data
 5. กลับไป Terminal แรก แล้วกด **Ctrl+C** เพื่อหยุด server เมื่อทดสอบเสร็จ
 
 ### Checkpoint
