@@ -2,11 +2,7 @@
 
 หลังจากสร้าง visual workflow ใน Exercise 5 แล้ว เราจะประกอบ logic เดิมเป็น code-first graph เพื่อดูแนวทางที่ Microsoft แนะนำสำหรับ workflow ใหม่ โดยยังใช้ ticket, Foundry project และ model deployment ชุดเดิม
 
-> **License:** Original workshop content © 2026 Amaround Co., Ltd. All rights reserved. Third-party notices are recorded in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md).
-
-ใช้เวลาประมาณ **30 นาที** Exercise นี้เป็นทางเลือก ผู้เรียนสามารถข้ามไป Exercise 6 ได้โดยไม่กระทบ common flow
-
-> **⚠️ Lifecycle note:** Microsoft ประกาศยุติ Foundry visual workflow designer และ in-portal workflow execution วันที่ **1 ธันวาคม 2026** และแนะนำ Microsoft Agent Framework สำหรับ workflow ใหม่ Exercise 5 ยังคงเป็น common flow ของ workshop ส่วน Exercise 5a แสดง migration path แบบ code-first ดู [official workflow and migration guidance](https://learn.microsoft.com/azure/foundry/agents/concepts/workflow#migration-guide)
+> **⚠️ note:** Microsoft ประกาศยุติ Foundry visual workflow designer และ in-portal workflow execution วันที่ **1 ธันวาคม 2026** และแนะนำ Microsoft Agent Framework สำหรับ workflow ใหม่ Exercise 5 ยังคงเป็น common flow ของ workshop ส่วน Exercise 5a แสดง migration path แบบ code-first ดู [official workflow and migration guidance](https://learn.microsoft.com/azure/foundry/agents/concepts/workflow#migration-guide)
 
 ## Prerequisites
 

@@ -1,10 +1,7 @@
 # Exercise 7: สร้าง multi-agent solution
 
-Fabrikam ต้องการแยกงานที่ตรวจสอบได้เป็นสามบทบาท: Summarizer รักษาข้อเท็จจริง, Classifier ติดประเภท และ Resolver เสนอการจัดการ เราจะใช้ Agent Framework `SequentialBuilder` ส่ง conversation เดียวผ่าน Agent ตามลำดับ
+Fabrikam ต้องการแยกงานในระบบที่ตรวจสอบได้เป็นให้ถูกจัดการเป็น 3 ส่วน: Summarizer สำหรับการสรุป, Classifier สำหรับแยกประเภท และ Resolver สำหรับการเสนอวิธีการแก้ปัญหา เราจะใช้ Agent Framework `SequentialBuilder` ส่งข้อความ prompt เดียวผ่าน Agent ทั้ง 3 ตามลำดับ
 
-> **License:** Original workshop content © 2026 Amaround Co., Ltd. All rights reserved. Third-party notices are recorded in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md).
-
-ใช้เวลาประมาณ **30 นาที** และใช้ Foundry project, model, `.env` และ codebase เดิม
 
 ## Prerequisites
 
@@ -60,11 +57,11 @@ flowchart LR
    python -m service_ops multi-agent --feedback "FB-3001: The portal is clear, but the dashboard timed out twice while I reviewed service metrics."
    ```
 
-4. ตรวจว่า final output มาจาก Resolver และเสนอการจัดการ Technical โดยไม่อ้างว่าแก้ระบบแล้ว
+4. ตรวจว่า final output มาจาก Resolver และเสนอการจัดการ Technical 
 
 ### Checkpoint
 
-- Sequential workflow สร้าง Agent ครบสามตัวตามลำดับ และ Resolver คืน next action หนึ่งรายการจากบริบทก่อนหน้า
+- Sequential workflow สร้าง Agent ครบสามตัวตามลำดับ และ Resolver ได้แนะนำ next action หนึ่งรายการ
 
 ---
 
@@ -91,7 +88,7 @@ The requester asks whether this is Severity 1 and what support action should hap
    python -m service_ops mcp-agent --source local --prompt "For CAP-4001, check Customer Portal status and summarize the synthetic queue."
    ```
 
-3. ตรวจนโยบายจาก Foundry IQ:
+3. ตรวจการทำงานจาก Foundry IQ:
 
    ```bash
    python -m service_ops agent --iq --prompt "Does a degraded but available portal qualify as Severity 1? Cite the policy source."

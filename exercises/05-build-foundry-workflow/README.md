@@ -1,16 +1,12 @@
 # Exercise 5: สร้าง visual Foundry workflow
 
-Fabrikam ต้องการกระบวนการ triage ที่มองเห็นลำดับงานชัดเจน เราจะสร้าง visual workflow เพื่อจำแนก ticket, ขอข้อมูลเพิ่มเมื่อ confidence ต่ำ, ส่ง Billing ให้คนตรวจ และร่างคำตอบสำหรับกรณีอื่น
+Fabrikam ต้องการมองเห็นลำดับงานชัดเจน เราจะสร้าง visual workflow เพื่อจำแนก ticket, ขอข้อมูลเพิ่มเมื่อ confidence ต่ำกว่าที่กำหนด, และส่ง Billing ให้คนตรวจ และร่างคำตอบสำหรับกรณีอื่น
 
-> **License:** Original workshop content © 2026 Amaround Co., Ltd. All rights reserved. Third-party notices are recorded in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md).
-
-ใช้เวลาประมาณ **45 นาที** และใช้ Foundry project กับ model deployment เดิม
 
 > **⚠️ Retirement notice:** Foundry workflows เป็น Preview และ Microsoft ประกาศยุติบริการวันที่ **1 ธันวาคม 2026** งาน production ใหม่ควรใช้ Microsoft Agent Framework ดู [official workflow and migration guidance](https://learn.microsoft.com/azure/foundry/agents/concepts/workflow) ชุด workshop นี้ยังสอน visual workflow เพื่อเข้าใจแนวคิดก่อนวันยุติบริการ และมี local fallback ใน Practice 3
 
 ## Prerequisites
 
-- ผู้สอนยืนยันว่า **Build > Agents > Workflows** เปิดให้ tenant และ ordinary learner account ใช้งานได้
 - มีไฟล์ [service-tickets.json](./files/service-tickets.json)
 - ผู้เรียนใช้ project เดิมและไม่สร้าง resource group หรือ model deployment ใหม่
 - ถ้า visual designer ไม่พร้อม ให้รัน local fallback แล้วศึกษาลำดับ node จาก diagram
@@ -49,7 +45,8 @@ flowchart LR
    - **Select the items to loop for each**: `Local.SupportTickets`
    - **Loop Value Variable**: สร้าง `Local.CurrentTicket`
 6. ภายใน For each เพิ่ม **Invoke > Agent**, สร้าง Agent ชื่อ `Fabrikam-Triage-Agent`
-7. เปิด **Parameters > Text format > JSON Schema** แล้วใส่:
+7. ใน tab **Details** ให้กดปุ่ม parameter ด้านข้างของชื่อ model 
+8. เปิด **Parameters > Text format > JSON Schema** แล้วใส่:
 
    ```json
    {
@@ -68,7 +65,7 @@ flowchart LR
    }
    ```
 
-8. ตั้ง **Instructions** ของ Triage Agent:
+9. ตั้ง **Instructions** ของ Triage Agent:
 
    ```text
    Classify each synthetic Fabrikam service ticket as exactly Billing, Technical, or General.
@@ -80,10 +77,10 @@ flowchart LR
    Return only the configured JSON response.
    ```
 
-9. ใน **Node settings** ตั้ง **Input message** เป็น `Local.CurrentTicket` แล้วบันทึก output:
+10. ใน **Node settings** ให้ตั้ง **Input message** เป็น `Local.CurrentTicket` แล้วบันทึก output ด้านล่าง:
    - message เป็น `Local.TriageOutputText`
    - JSON object เป็น `Local.TriageOutputJson`
-10. เลือก **Done** แล้ว **Save** workflow
+11. เลือก **Done** แล้ว **Save** workflow
 
 ### Checkpoint
 
@@ -130,8 +127,9 @@ flowchart LR
    Return only the recommended response.
    ```
 
-6. ตั้ง input เป็น `Local.TriageOutputText` และบันทึก message เป็น `Local.ResolutionOutputText`
-7. เลือก **Done** แล้ว **Save**
+6. ตั้ง input เป็น `Local.TriageOutputText` 
+7. บันทึก message เป็น `Local.ResolutionOutputText`
+8. เลือก **Done** แล้ว **Save**
 
 ### Checkpoint
 
@@ -188,19 +186,23 @@ flowchart LR
    python -m service_ops workflow --mode foundry
    ```
 
-5. รัน fallback ที่ไม่ใช้ Azure quota:
+5. รัน fallback ที่ไม่ใช้ Azure quota (เป็นแค่การจำลองการทำงานของ workflow) และตรวจ output:
 
    ```bash
    python -m service_ops workflow --mode local
    ```
 
-6. เปรียบเทียบ route ทั้งสาม ถ้าผลของโมเดลต่างจาก fallback ให้ตรวจ Instructions, JSON Schema และ confidence condition ก่อนแก้ข้อมูล
+6. เปรียบเทียบ route ทั้งสาม ถ้าผลการทำงานของ workflow ต่างจาก fallback ให้ตรวจ Instructions, JSON Schema และ confidence condition ก่อนแก้ข้อมูล
 
 ### Checkpoint
 
 - Portal หรือ `--mode foundry` แสดงครบสาม route และ `--mode local` คืน `automated-response`, `human-escalation` และ `request-more-information`
 
 > **💡 Fallback:** ถ้า Preview designer หรือ workflow invocation ใช้ไม่ได้ ให้เก็บผล `--mode local` เป็นหลักฐานชั่วคราว แล้วทำ Exercise 7 ซึ่งใช้ Agent Framework แทน visual workflow
+
+### (optional) สร้าง workflow ด้วย Agent Framework
+
+ดูเพิ่มเติมที่ [Exercise 5A: สร้าง workflow ด้วย Agent Framework](../05a-build-agent-framework-workflow/README.md)
 
 ---
 
