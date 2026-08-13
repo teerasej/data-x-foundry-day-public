@@ -1,0 +1,7 @@
+{
+  "request_id": "SR-2001",
+  "summary": "All synthetic users are unable to sign in to the Customer Portal.",
+  "reason": "Complete outage in the training scenario requires human incident review.",
+  "priority": "high",
+  "contains_production_data": false
+}

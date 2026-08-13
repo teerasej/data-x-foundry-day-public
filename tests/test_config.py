@@ -1,0 +1,30 @@
+from service_ops.config import Settings
+
+
+def test_settings_detect_missing_chat_values() -> None:
+    settings = Settings.from_environment(env={})
+    assert settings.missing_for_chat_agent() == (
+        "FOUNDRY_PROJECT_ENDPOINT",
+        "FOUNDRY_MODEL",
+    )
+
+
+def test_settings_accept_configured_chat_values() -> None:
+    settings = Settings.from_environment(
+        env={
+            "FOUNDRY_PROJECT_ENDPOINT": "https://example.services.ai.azure.com/api/projects/demo",
+            "FOUNDRY_MODEL": "approved-model",
+        }
+    )
+    assert settings.missing_for_chat_agent() == ()
+
+
+def test_managed_agent_requires_name_and_version() -> None:
+    settings = Settings(
+        foundry_project_endpoint="https://example.services.ai.azure.com/api/projects/demo"
+    )
+    assert settings.missing_for_managed_agent() == (
+        "FOUNDRY_AGENT_NAME",
+        "FOUNDRY_AGENT_VERSION",
+        "FOUNDRY_IQ_MCP_ENDPOINT",
+    )

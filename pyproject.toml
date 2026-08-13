@@ -1,0 +1,30 @@
+[project]
+name = "fabrikam-service-operations"
+version = "0.1.0"
+description = "Cumulative learner application for the Microsoft Foundry Agent Workshop"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "agent-framework-core==1.13.0",
+  "agent-framework-foundry==1.10.4",
+  "agent-framework-orchestrations==1.0.2",
+  "azure-identity==1.25.3",
+  "mcp==1.29.0",
+  "pydantic==2.13.4",
+  "python-dotenv==1.2.2",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"service_ops/agent.py" = ["F401"]
+"service_ops/framework_workflow.py" = ["F401"]

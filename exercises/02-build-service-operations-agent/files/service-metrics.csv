@@ -1,0 +1,5 @@
+metric,value,unit,target,period,status_note
+first_response_time_minutes,18,minutes,20_or_less,last_7_days,within_target
+resolution_rate_percent,86,percent,90_or_more,last_30_days,below_target
+open_p1_incidents,1,count,0,current,above_target
+customer_satisfaction_score,4.4,score_out_of_5,4.2_or_more,last_30_days,within_target

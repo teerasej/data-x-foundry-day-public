@@ -1,0 +1,16 @@
+{
+  "tickets": [
+    {
+      "ticket_id": "SR-1001",
+      "description": "The Invoice API returns a 403 error when our training client creates an invoice."
+    },
+    {
+      "ticket_id": "SR-1002",
+      "description": "I was charged twice for the same synthetic invoice and need a review."
+    },
+    {
+      "ticket_id": "SR-1003",
+      "description": "Dashboard help"
+    }
+  ]
+}

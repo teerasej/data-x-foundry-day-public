@@ -1,0 +1,28 @@
+{
+  "snapshot": "synthetic-training-data",
+  "services": [
+    {
+      "name": "Customer Portal",
+      "status": "degraded",
+      "response_time_minutes": 18,
+      "message": "Login succeeds, but some dashboard requests are slower than the 10-minute response target."
+    },
+    {
+      "name": "Invoice API",
+      "status": "operational",
+      "response_time_minutes": 4,
+      "message": "No synthetic incident is active."
+    },
+    {
+      "name": "Notification Service",
+      "status": "maintenance",
+      "response_time_minutes": 12,
+      "message": "Planned maintenance is scheduled in the training scenario."
+    }
+  ],
+  "queue_summary": {
+    "waiting_requests": 14,
+    "oldest_wait_minutes": 27,
+    "staffing_note": "One synthetic service specialist is assigned to priority requests."
+  }
+}
