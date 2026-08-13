@@ -45,6 +45,7 @@
 | 3 | [เชื่อมต่อ Agent กับ MCP](./exercises/03-extend-agent-with-mcp/README.md) | พร้อมใช้งาน |
 | 4 | [เพิ่ม Foundry IQ](./exercises/04-add-foundry-iq/README.md) | พร้อมใช้งาน; ต้องผ่าน environment gate |
 | 5 | [สร้าง visual workflow](./exercises/05-build-foundry-workflow/README.md) | พร้อมใช้งาน; Preview และ retire 1 Dec 2026 |
+| 5a (Optional) | [สร้าง Agent Framework routing workflow](./exercises/05a-build-agent-framework-workflow/README.md) | ทางเลือก; migration path แบบ code-first |
 | 6 | [สร้าง code-first Agent Framework agent](./exercises/06-build-agent-framework-agent/README.md) | พร้อมใช้งาน |
 | 7 | [สร้าง multi-agent solution](./exercises/07-build-multi-agent-solution/README.md) | พร้อมใช้งาน |
 | Optional | [เผยแพร่ไปยัง Teams และ Microsoft 365 Copilot](./exercises/optional-teams-copilot/README.md) | `ต้องตรวจสอบก่อนเริ่มอบรม` |
@@ -57,6 +58,8 @@ python -m service_ops agent
 python -m service_ops mcp-server
 python -m service_ops mcp-agent --source local --prompt "..."
 python -m service_ops workflow --mode local
+python -m service_ops workflow-framework --diagram
+python -m service_ops workflow-framework
 python -m service_ops multi-agent --feedback "..."
 ```
 

@@ -3,6 +3,7 @@ import pytest
 from service_ops.config import Settings
 from service_ops.escalation import build_escalation_agent, create_escalation
 from service_ops.foundry_iq import build_foundry_iq_agent
+from service_ops.framework_workflow import build_ticket_workflow
 from service_ops.mcp_agent import build_mcp_agent
 from service_ops.mcp_server import create_mcp_server, find_service_status, summarize_queue
 from service_ops.multi_agent import build_multi_agent_workflow
@@ -27,6 +28,7 @@ MANAGED_SETTINGS = Settings(
         (build_mcp_agent, ("local", CHAT_SETTINGS)),
         (build_foundry_iq_agent, (MANAGED_SETTINGS,)),
         (invoke_foundry_workflow, (CHAT_SETTINGS,)),
+        (build_ticket_workflow, (CHAT_SETTINGS,)),
         (build_escalation_agent, (CHAT_SETTINGS,)),
         (build_multi_agent_workflow, (CHAT_SETTINGS,)),
     ],

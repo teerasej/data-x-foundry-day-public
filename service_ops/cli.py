@@ -41,6 +41,16 @@ def build_parser() -> argparse.ArgumentParser:
     workflow_parser = subparsers.add_parser("workflow", help="ทดสอบ ticket-triage workflow")
     workflow_parser.add_argument("--mode", choices=("local", "foundry"), default="local")
 
+    framework_workflow_parser = subparsers.add_parser(
+        "workflow-framework",
+        help="รัน optional Agent Framework ticket-routing workflow",
+    )
+    framework_workflow_parser.add_argument(
+        "--diagram",
+        action="store_true",
+        help="แสดง Mermaid diagram โดยไม่เรียก model",
+    )
+
     multi_agent_parser = subparsers.add_parser(
         "multi-agent", help="รัน summarizer, classifier และ resolver ตามลำดับ"
     )
@@ -99,6 +109,21 @@ async def _run_multi_agent(feedback: str) -> int:
         return 2
 
 
+async def _run_framework_workflow(*, diagram: bool) -> int:
+    from service_ops.framework_workflow import render_workflow_mermaid, run_framework_workflow
+
+    try:
+        if diagram:
+            print(render_workflow_mermaid())
+        else:
+            routes = await run_framework_workflow()
+            print(json.dumps(routes, ensure_ascii=False, indent=2))
+        return 0
+    except (NotImplementedError, RuntimeError, ValueError) as error:
+        print(f"ACTION: {error}")
+        return 2
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "check":
@@ -133,6 +158,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         except (NotImplementedError, ValueError) as error:
             print(f"ACTION: {error}")
             return 2
+    if args.command == "workflow-framework":
+        return asyncio.run(_run_framework_workflow(diagram=args.diagram))
     if args.command == "multi-agent":
         return asyncio.run(_run_multi_agent(args.feedback))
     if args.command is None:
