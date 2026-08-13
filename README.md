@@ -4,7 +4,7 @@
 
 > **License:** เนื้อหาต้นฉบับของเวิร์กช็อปนี้เป็นลิขสิทธิ์ของ Amaround Co., Ltd. แบบ All rights reserved ส่วนเนื้อหาและโค้ดที่ดัดแปลงจาก MicrosoftLearning อยู่ภายใต้ MIT License ตาม [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md)
 
-## ก่อนเริ่ม
+## 1. ก่อนเริ่ม
 
 - สำหรับ IT Admin: ทำตาม [IT Admin Environment Setup](./IT_ADMIN_ENVIRONMENT_SETUP.md) เพื่อเตรียม Azure account, Resource group, RBAC, Network และ GitHub Codespaces
 - สำหรับผู้เรียน: ทำตาม [Student Environment Validation](./STUDENT_ENVIRONMENT_VALIDATION.md) เพื่อตรวจ GitHub, Codespace, Azure account, Role และ Microsoft Foundry ก่อนเริ่ม Exercise
@@ -14,13 +14,13 @@
 - GitHub Codespaces มี included usage จำกัดตามประเภทบัญชี จึงต้องตรวจสอบสิทธิ์ก่อนเริ่มอบรม
 - ถ้าใช้ Codespaces ไม่ได้ ให้ใช้ VS Code พร้อม Dev Containers เป็น fallback
 
-## ดาวน์โหลดไฟล์เตรียมแบบครั้งเดียว
+## 2. ดาวน์โหลดไฟล์แบบครั้งเดียว
 
 - ผู้เรียนสามารถดาวน์โหลดไฟล์ตัวอย่างของ Exercise 1-7 แบบครั้งเดียวได้ที่ [student-prep-files.zip](./exercises/student-prep-files.zip)
 - หลังดาวน์โหลดให้แตกไฟล์ zip โดยคงโครงสร้างโฟลเดอร์เดิม เพื่อหาไฟล์ตามขั้นตอนแต่ละ Exercise ได้ง่าย
 - ผู้สอนสามารถ rebuild ไฟล์นี้ได้ด้วยคำสั่ง `bash scripts/build_student_prep_zip.sh`
 
-## เริ่ม Codespace
+## 3. เริ่ม Codespace
 
 1. เปิด repository นี้ใน GitHub แล้วเลือก **Code > Codespaces > Create codespace on current branch**
 2. รอให้ bootstrap ติดตั้ง dependencies ลงใน `.venv` โดยอัตโนมัติ
@@ -35,7 +35,7 @@
 > **⚠️ Note:** คำสั่งตรวจสอบอาจแสดง `ACTION` สำหรับ Azure sign-in และค่าใน `.env` จนกว่าจะทำ Exercise 1 เสร็จ ซึ่งไม่ได้หมายความว่ามีปัญหาครับ
 
 
-## Exercises
+## 4. Exercises
 
 | ลำดับ | Exercise | สถานะในชุดงานนี้ |
 |---|---|---|
@@ -49,20 +49,7 @@
 | 7 | [สร้าง multi-agent solution](./exercises/07-build-multi-agent-solution/README.md) | พร้อมใช้งาน |
 | Optional | [เผยแพร่ไปยัง Teams และ Microsoft 365 Copilot](./exercises/optional-teams-copilot/README.md) | `ต้องตรวจสอบก่อนเริ่มอบรม` |
 
-## Application commands
 
-```bash
-python -m service_ops check
-python -m service_ops agent
-python -m service_ops mcp-server
-python -m service_ops mcp-agent --source local --prompt "..."
-python -m service_ops workflow --mode local
-python -m service_ops workflow-framework --diagram
-python -m service_ops workflow-framework
-python -m service_ops multi-agent --feedback "..."
-```
-
-Starter code มี `TODO Exercise ...` ให้ผู้เรียนเติมตามลำดับ ห้ามข้ามไป copy private instructor solution ทุก Exercise ใช้ package `service_ops`, project และ model deployment เดิม
 
 ## การเก็บข้อมูลสำคัญ
 
