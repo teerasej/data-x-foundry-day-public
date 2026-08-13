@@ -8,15 +8,15 @@ output_zip="exercises/student-prep-files.zip"
 tmp_file_list="$(mktemp "${TMPDIR:-/tmp}/student-prep-files.XXXXXX")"
 trap 'rm -f "$tmp_file_list"' EXIT
 
-exercise_files_dirs=(
-  "exercises/01-prepare-foundry-project/files"
-  "exercises/02-build-service-operations-agent/files"
-  "exercises/03-extend-agent-with-mcp/files"
-  "exercises/04-add-foundry-iq/files"
-  "exercises/05-build-foundry-workflow/files"
-  "exercises/06-build-agent-framework-agent/files"
-  "exercises/07-build-multi-agent-solution/files"
-)
+exercise_files_dirs=()
+while IFS= read -r dir_path; do
+  exercise_files_dirs+=("$dir_path")
+done < <(find exercises -type d -name files | sort)
+
+if [[ ${#exercise_files_dirs[@]} -eq 0 ]]; then
+  echo "ERROR: No exercise files directories found under exercises/" >&2
+  exit 1
+fi
 
 for dir_path in "${exercise_files_dirs[@]}"; do
   if [[ ! -d "$dir_path" ]]; then

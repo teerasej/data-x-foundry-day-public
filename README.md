@@ -32,9 +32,8 @@
 
 4. ตรวจว่า Python, Git, Azure CLI และ Python packages แสดงสถานะพร้อมใช้งาน
 
-> **⚠️ Note:** คำสั่งตรวจสอบอาจแสดง `ACTION` สำหรับ Azure sign-in และค่าใน `.env` จนกว่าจะทำ Exercise 1 เสร็จ นี่เป็นผลลัพธ์ที่คาดไว้ ไม่ใช่การติดตั้งล้มเหลว
+> **⚠️ Note:** คำสั่งตรวจสอบอาจแสดง `ACTION` สำหรับ Azure sign-in และค่าใน `.env` จนกว่าจะทำ Exercise 1 เสร็จ ซึ่งไม่ได้หมายความว่ามีปัญหาครับ
 
-> **อัปเดต Codespace เดิม:** หลัง `git pull` ให้ restart Codespace หรือรัน `bash .devcontainer/bootstrap.sh` หนึ่งครั้ง เมื่อ `requirements.lock` เปลี่ยน bootstrap จะสร้าง `.venv` ใหม่อัตโนมัติ เพื่อไม่ให้ package จาก dependency รุ่นเดิมค้างอยู่
 
 ## Exercises
 
