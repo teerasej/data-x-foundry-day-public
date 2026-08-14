@@ -20,6 +20,10 @@
 - หลังดาวน์โหลดให้แตกไฟล์ zip โดยคงโครงสร้างโฟลเดอร์เดิม เพื่อหาไฟล์ตามขั้นตอนแต่ละ Exercise ได้ง่าย
 - ผู้สอนสามารถ rebuild ไฟล์นี้ได้ด้วยคำสั่ง `bash scripts/build_student_prep_zip.sh`
 
+### Presentation 
+
+- ผู้เรียนสามารถดาวน์โหลดไฟล์ presentation [presentation]([./presentation/presentation.zip](https://nextflowth-my.sharepoint.com/:b:/g/personal/teerasej_nextflowth_onmicrosoft_com/IQCev9SYwcGtRKGLx760v1CmASONDfm6WvVi9BTKVuGslKU?e=3M2Jef))
+
 ## 3. เริ่ม Codespace
 
 1. เปิด repository นี้ใน GitHub แล้วเลือก **Code > Codespaces > Create codespace on current branch**
